@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- CentralizedThermalDistribution Thermal Buildings-->
+<Defs>
+  <!-- Parent Thermal Building -->
+  <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseThermalBuilding" ParentName="BuildingBase">
+    <category>Building</category>
+    <thingClass>Building</thingClass>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <selectable>true</selectable>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <repairEffect>Repair</repairEffect>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <thingCategories>
+      <li>BuildingsClimate</li>
+    </thingCategories>
+    <statBases>
+      <Beauty>-10</Beauty>
+    </statBases>
+  </ThingDef>
+  
+  <!--
+  <ThingDef ParentName="CentralizedThermalDistributionBuilding">
+    <defName>IntakeFan</defName>
+    <label>Intake fan</label>
+    <thingClass>CentralizedThermalDistribution.Building_IntakeFan</thingClass>
+    <graphicData>
+      <texPath>Things/Building/IntakeFan</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <size>(1,1)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>1</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>1600</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>20</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <description>An intake fan. Throughput: 300 cc/s.</description>
+    <costList>
+      <Steel>100</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>150</basePowerConsumption>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_AirFlow">
+        <compClass>CentralizedThermalDistribution.CompAirFlowProducer</compClass>
+        <baseAirFlow>300.0</baseAirFlow>
+        <pipeColor>Any</pipeColor>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CCC_Intake</designatorDropdown>
+    <designationHotKey>Misc4</designationHotKey>
+    <researchPrerequisites>
+      <li>BasicClimateControl</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_IntakeFan</li>
+    </placeWorkers>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistributionBuilding">
+    <defName>AirThermal</defName>
+    <label>Climate control unit</label>
+    <thingClass>CentralizedThermalDistribution.Building_AirThermal</thingClass>
+    <graphicData>
+      <texPath>Things/Building/AirThermal</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <size>(1,1)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>1</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>1600</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>20</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <description>A climate control unit for heating and cooling air. Throughput: 900 cc/s.</description>
+    <costList>
+      <Steel>200</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>200</basePowerConsumption>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_AirFlow">
+        <compClass>CentralizedThermalDistribution.CompAirFlowTempControl</compClass>
+        <pipeColor>Any</pipeColor>
+        <thermalCapacity>900</thermalCapacity>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_TempControl" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CCC_ACC</designatorDropdown>
+    <designationHotKey>Misc4</designationHotKey>
+    <researchPrerequisites>
+      <li>BasicClimateControl</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_AirThermal</li>
+    </placeWorkers>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistributionBuilding">
+    <defName>LargeIntakeFan</defName>
+    <label>Large intake fan</label>
+    <thingClass>CentralizedThermalDistribution.Building_IntakeFan</thingClass>
+    <graphicData>
+      <drawSize>(2,2)</drawSize>
+      <texPath>Things/Building/LargeIntakeFan</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <size>(2,2)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>1</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>4800</WorkToBuild>
+      <MaxHitPoints>300</MaxHitPoints>
+      <Mass>100</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <description>A large intake fan. Throughput: 1500 cc/s.</description>
+    <costList>
+      <Steel>300</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>450</basePowerConsumption>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_AirFlow">
+        <compClass>CentralizedThermalDistribution.CompAirFlowProducer</compClass>
+        <baseAirFlow>1500.0</baseAirFlow>
+        <pipeColor>Any</pipeColor>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CCC_Intake</designatorDropdown>
+    <designationHotKey>Misc4</designationHotKey>
+    <researchPrerequisites>
+      <li>IndustrialClimateControl</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_IntakeFan</li>
+    </placeWorkers>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistributionBuilding">
+    <defName>LargeAirThermal</defName>
+    <label>Large climate control unit</label>
+    <thingClass>CentralizedThermalDistribution.Building_AirThermal</thingClass>
+    <graphicData>
+      <texPath>Things/Building/LargeAirThermal</texPath>
+      <drawSize>(2,2)</drawSize>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <size>(2,2)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>1</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>4800</WorkToBuild>
+      <MaxHitPoints>300</MaxHitPoints>
+      <Mass>80</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <description>A large climate control unit for heating and cooling air. Throughput: 4500 cc/s.</description>
+    <costList>
+      <Steel>600</Steel>
+      <ComponentIndustrial>9</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>600</basePowerConsumption>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_AirFlow">
+        <compClass>CentralizedThermalDistribution.CompAirFlowTempControl</compClass>
+        <pipeColor>Any</pipeColor>
+        <thermalCapacity>4500</thermalCapacity>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_TempControl" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CCC_ACC</designatorDropdown>
+    <designationHotKey>Misc4</designationHotKey>
+    <researchPrerequisites>
+      <li>IndustrialClimateControl</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_AirThermal</li>
+    </placeWorkers>
+  </ThingDef>
+  -->
+</Defs>

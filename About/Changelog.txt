@@ -1,3 +1,7 @@
+# Changelog for CentralizedThermalDistribution
+
+1.1.0.0 - Rework
+
 # Changelog for CentralizedClimateControl
 
 1.0.21.0 - Hidden pipes do not show next to normal pipes, cannot build hidden and normal pipes on the same cell

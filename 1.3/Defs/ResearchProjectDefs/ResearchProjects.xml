@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <ResearchProjectDef>
-    <defName>BasicClimateControl</defName>
-    <label>Basic Climate Control</label>
-    <description>Use basic central heating and cooling system to maintain air flow in your colony.</description>
+    <defName>BasicThermalDistribution</defName>
+    <label>Basic Thermal Distribution</label>
+    <description>Use condensers, heat pumps, and coil vents to maintain efficient temperature control in your colony.</description>
     <baseCost>800</baseCost>
     <techLevel>Industrial</techLevel>
     <prerequisites>
@@ -13,13 +13,13 @@
     <researchViewY>5</researchViewY>
   </ResearchProjectDef>
   <ResearchProjectDef>
-    <defName>IndustrialClimateControl</defName>
-    <label>Industrial Climate Control</label>
-    <description>Build Large Intakes and Climate Control.</description>
+    <defName>LargeThermalDistribution</defName>
+    <label>Large Thermal Distribution</label>
+    <description>Build larger condensers, heat pumps, and coil vents.</description>
     <baseCost>1200</baseCost>
     <techLevel>Industrial</techLevel>
     <prerequisites>
-      <li>BasicClimateControl</li>
+      <li>BasicThermalDistribution</li>
     </prerequisites>
     <researchViewX>3</researchViewX>
     <researchViewY>5</researchViewY>

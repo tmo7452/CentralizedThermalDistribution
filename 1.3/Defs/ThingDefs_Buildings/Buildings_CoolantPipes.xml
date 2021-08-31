@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CentralizedThermalDistribution Coolant Pipes -->
+<Defs>
+  <!-- Parent Coolant Pipe Buildings -->
+  <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseCoolantPipe">
+    <label>coolantpipe</label>
+    <description>Coolant Pipes.</description>
+    <thingClass>CentralizedThermalDistribution.Building_CoolantPipe</thingClass>
+    <designatorDropdown>CTD_CoolantPipes</designatorDropdown>
+    <category>Building</category>
+    <building>
+      <isInert>true</isInert>
+      <isEdifice>false</isEdifice>
+    </building>
+    <altitudeLayer>FloorEmplacement</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <statBases>
+      <MaxHitPoints>80</MaxHitPoints>
+      <WorkToBuild>35</WorkToBuild>
+      <Flammability>1.0</Flammability>
+      <Beauty>-2</Beauty>
+    </statBases>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <placingDraggableDimensions>1</placingDraggableDimensions>
+    <rotatable>false</rotatable>
+    <selectable>true</selectable>
+    <neverMultiSelect>true</neverMultiSelect>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <designationHotKey>Misc1</designationHotKey>
+    <researchPrerequisites>
+      <li>BasicThermalDistribution</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_CoolantPipe</li>
+    </placeWorkers>
+    <clearBuildingArea>false</clearBuildingArea>
+  </ThingDef>
+  
+  <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseHiddenCoolantPipe" ParentName="CentralizedThermalDistribution_BaseCoolantPipe">
+    <statBases>
+      <MaxHitPoints>120</MaxHitPoints>
+      <WorkToBuild>55</WorkToBuild>
+      <Flammability>1.0</Flammability>
+      <Beauty>0</Beauty>
+    </statBases>
+  </ThingDef>
+  
+  <!-- Red Coolant Pipes -->
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseCoolantPipe">
+    <defName>coolantPipeRed</defName>
+    <label>Red coolant pipe</label>
+    <description>Red pipes for carrying coolant.</description>
+    <thingClass>CentralizedThermalDistribution.Building_CoolantPipeRed</thingClass>
+    <uiIconPath>UI/CoolantPipeRed</uiIconPath>
+    <costList>
+      <Steel>1</Steel>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/CoolantPipeRed_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+      <damageData>
+        <rect>(0,0.35,1,0.3)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/CoolantPipeRed_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <designationCategory>Temperature</designationCategory>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+        <flowType>Red</flowType>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseHiddenCoolantPipe">
+    <defName>coolantPipeRedHidden</defName>
+    <label>Red hidden coolant pipe</label>
+    <description>Red pipes for carrying coolant under floors.</description>
+    <thingClass>CentralizedThermalDistribution.Building_CoolantPipeRed</thingClass>
+    <uiIconPath>UI/CoolantPipeRedHidden</uiIconPath>
+    <costList>
+      <Steel>5</Steel>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/CoolantPipeBlank_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+      <damageData>
+        <rect>(0,0.35,1,0.3)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/CoolantPipeRed_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <designationCategory>Temperature</designationCategory>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+        <flowType>Red</flowType>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <!-- Blue Coolant Pipes -->
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseCoolantPipe">
+    <defName>CoolantPipeBlue</defName>
+    <label>Blue coolant pipe</label>
+    <description>Blue pipes for carrying coolant.</description>
+    <thingClass>CentralizedThermalDistribution.Building_CoolantPipeBlue</thingClass>
+    <uiIconPath>UI/CoolantPipeBlue</uiIconPath>
+    <costList>
+      <Steel>1</Steel>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/CoolantPipeBlue_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+      <damageData>
+        <rect>(0,0.35,1,0.3)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/CoolantPipeBlue_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <designationCategory>Temperature</designationCategory>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+        <flowType>Blue</flowType>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseHiddenCoolantPipe">
+    <defName>CoolantPipeBlueHidden</defName>
+    <label>Blue hidden coolant pipe</label>
+    <description>Blue pipes for carrying coolant under floors.</description>
+    <thingClass>CentralizedThermalDistribution.Building_CoolantPipeBlue</thingClass>
+    <uiIconPath>UI/CoolantPipeBlueHidden</uiIconPath>
+    <costList>
+      <Steel>5</Steel>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/CoolantPipeBlank_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+      <damageData>
+        <rect>(0,0.35,1,0.3)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/CoolantPipeBlue_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <designationCategory>Temperature</designationCategory>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+        <flowType>Blue</flowType>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <!-- Cyan Coolant Pipes -->
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseCoolantPipe">
+    <defName>CoolantPipeCyan</defName>
+    <label>Cyan coolant pipe</label>
+    <description>Cyan pipes for carrying coolant.</description>
+    <thingClass>CentralizedThermalDistribution.Building_CoolantPipeCyan</thingClass>
+    <uiIconPath>UI/CoolantPipeCyan</uiIconPath>
+    <costList>
+      <Steel>1</Steel>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/CoolantPipeCyan_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+      <damageData>
+        <rect>(0,0.35,1,0.3)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/CoolantPipeCyan_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <designationCategory>Temperature</designationCategory>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+        <flowType>Cyan</flowType>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseHiddenCoolantPipe">
+    <defName>CoolantPipeCyanHidden</defName>
+    <label>Cyan hidden coolant pipe</label>
+    <description>Cyan pipes for carrying coolant under floors.</description>
+    <thingClass>CentralizedThermalDistribution.Building_CoolantPipeCyan</thingClass>
+    <uiIconPath>UI/CoolantPipeCyanHidden</uiIconPath>
+    <costList>
+      <Steel>5</Steel>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/CoolantPipeBlank_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Custom6</li>
+      </linkFlags>
+      <damageData>
+        <rect>(0,0.35,1,0.3)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/CoolantPipeCyan_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <designationCategory>Temperature</designationCategory>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+        <flowType>Cyan</flowType>
+      </li>
+    </comps>
+  </ThingDef>
+</Defs>

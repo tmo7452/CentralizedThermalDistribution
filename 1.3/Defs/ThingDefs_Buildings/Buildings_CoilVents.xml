@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- CentralizedThermalDistribution Coil Vents -->
+<Defs>
+  <!-- Parent Coil Vent Building -->
+  <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseCoilVent" ParentName="BuildingBase">
+    <category>Building</category>
+    <thingClass>Building</thingClass>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <selectable>true</selectable>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <repairEffect>Repair</repairEffect>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <thingCategories>
+      <li>BuildingsClimate</li>
+    </thingCategories>
+    <statBases>
+      <Beauty>-10</Beauty>
+    </statBases>
+    <clearBuildingArea>false</clearBuildingArea>
+    <researchPrerequisites>
+      <li>BasicThermalDistribution</li>
+    </researchPrerequisites>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CTD_CoilVents</designatorDropdown>
+    <designationHotKey>Misc4</designationHotKey>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <tickerType>Rare</tickerType>
+  </ThingDef>
+  
+  <!-- Parent Wall Mounted Coil Vent Building -->
+  <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseWallCoilVent" ParentName="CentralizedThermalDistribution_BaseCoilVent">
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_NeedsWall</li>
+      <li>CentralizedThermalDistribution.PlaceWorker_CoilVent</li>
+    </placeWorkers>
+    <altitudeLayer>PawnUnused</altitudeLayer>
+    <building>
+      <isEdifice>false</isEdifice>
+    </building>
+  </ThingDef>
+  
+  <!-- Parent Full Size Coil Vent Building -->
+  <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseSurroundCoilVent" ParentName="CentralizedThermalDistribution_BaseCoilVent">
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>1</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <holdsRoof>true</holdsRoof>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_SurroundCoilVent</li>
+    </placeWorkers>
+  </ThingDef>
+  
+  <!-- Small Wall Coil Vent -->
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseWallCoilVent">
+    <defName>WallCoilVentSmall</defName>
+    <label>Small wall coil vent</label>
+    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
+    <graphicData>
+      <texPath>Things/Building/CoilVents/WallCoilVentSmall</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <statBases>
+      <WorkToBuild>175</WorkToBuild>
+      <MaxHitPoints>75</MaxHitPoints>
+      <Mass>1</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <description>A small wall-mounted coil vent. Throughput: 50 cc/s.</description>
+    <costList>
+      <Steel>35</Steel>
+    </costList>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowConsumer</compClass>
+        <flowType>Any</flowType>
+        <baseAirExhaust>50</baseAirExhaust>
+      </li>
+      <li Class="CompProperties_Flickable">
+        <commandTexture>UI/Commands/Vent</commandTexture>
+        <commandLabelKey>CommandDesignateOpenCloseVentLabel</commandLabelKey>
+        <commandDescKey>CommandDesignateOpenCloseVentDesc</commandDescKey>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <!-- Regular Wall Coil Vent -->
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseWallCoilVent">
+    <defName>WallCoilVent</defName>
+    <label>Wall coil vent</label>
+    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
+    <graphicData>
+      <texPath>Things/Building/CoilVents/WallCoilVent</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <statBases>
+      <WorkToBuild>350</WorkToBuild>
+      <MaxHitPoints>75</MaxHitPoints>
+      <Mass>2</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <description>A wall-mounted coil vent. Throughput: 100 cc/s.</description>
+    <costList>
+      <Steel>70</Steel>
+    </costList>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowConsumer</compClass>
+        <flowType>Any</flowType>
+        <baseAirExhaust>100</baseAirExhaust>
+      </li>
+      <li Class="CompProperties_Flickable">
+        <commandTexture>UI/Commands/Vent</commandTexture>
+        <commandLabelKey>CommandDesignateOpenCloseVentLabel</commandLabelKey>
+        <commandDescKey>CommandDesignateOpenCloseVentDesc</commandDescKey>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <!-- Regular Surround Coil Vents -->
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseSurroundCoilVent">
+    <defName>SurroundCoilVent</defName>
+    <label>Surround coil vent</label>
+    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
+    <graphicData>
+      <texPath>Things/Building/CoilVents/SurroundCoilVent</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <statBases>
+      <WorkToBuild>1050</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>50</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <description>A surround exhaust vent. Throughput: 300 cc/s.</description>
+    <costList>
+      <Steel>210</Steel>
+    </costList>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowConsumer</compClass>
+        <flowType>Any</flowType>
+        <baseAirExhaust>300</baseAirExhaust>
+      </li>
+      <li Class="CompProperties_Flickable">
+        <commandTexture>UI/Commands/Vent</commandTexture>
+        <commandLabelKey>CommandDesignateOpenCloseVentLabel</commandLabelKey>
+        <commandDescKey>CommandDesignateOpenCloseVentDesc</commandDescKey>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <!-- Wide Surround Coil Vents -->
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseSurroundCoilVent">
+    <defName>SurroundCoilVentWide</defName>
+    <label>Large surround coil vent</label>
+    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
+    <size>(2,1)</size>
+    <graphicData>
+      <drawSize>(2,1)</drawSize>
+      <texPath>Things/Building/CoilVents/SurroundCoilVentWide</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <statBases>
+      <WorkToBuild>2100</WorkToBuild>
+      <MaxHitPoints>200</MaxHitPoints>
+      <Mass>100</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <description>A large surround exhaust vent. Throughput: 600 cc/s.</description>
+    <costList>
+      <Steel>420</Steel>
+    </costList>
+    <comps>
+      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
+        <compClass>CentralizedThermalDistribution.CompCoolantFlowConsumer</compClass>
+        <flowType>Any</flowType>
+        <baseAirExhaust>600</baseAirExhaust>
+      </li>
+      <li Class="CompProperties_Flickable">
+        <commandTexture>UI/Commands/Vent</commandTexture>
+        <commandLabelKey>CommandDesignateOpenCloseVentLabel</commandLabelKey>
+        <commandDescKey>CommandDesignateOpenCloseVentDesc</commandDescKey>
+      </li>
+    </comps>
+  </ThingDef>
+</Defs>
