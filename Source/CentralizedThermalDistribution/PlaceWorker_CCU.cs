@@ -83,7 +83,7 @@ namespace CentralizedThermalDistribution
                 //if (intVec.Impassable(map))
                 if ((iterator + IntVec3.South.RotatedBy(rot)).Impassable(map))
                 {
-                    return "CentralizedClimateControl.Consumer.AirThermalPlaceError".Translate();
+                    return "CentralizedThermalDistribution.Consumer.AirThermalPlaceError".Translate();
                 }
 
                 iterator += IntVec3.East.RotatedBy(rot);

@@ -2,7 +2,7 @@
 
 namespace CentralizedThermalDistribution
 {
-    public class CompProperties_CoolantFlow : CompProperties
+    public class CompProperties_Coolant : CompProperties
     {
         public float baseAirExhaust;
 
@@ -12,5 +12,8 @@ namespace CentralizedThermalDistribution
 
         public float thermalCapacity;
         public bool transmitsAir;
+
+        public float ThermalWorkMultiplier;
+        public float ConditionerMaxTemperatureDelta;
     }
 }

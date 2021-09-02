@@ -28,7 +28,7 @@ namespace CentralizedThermalDistribution
 
             var thingDef = designatorBuild?.PlacingDef as ThingDef;
 
-            if (thingDef?.comps.OfType<CompProperties_CoolantFlow>().FirstOrDefault(x => x.flowType == FlowType) != null)
+            if (thingDef?.comps.OfType<CompProperties_Coolant>().FirstOrDefault(x => x.flowType == FlowType) != null)
             {
                 base.DrawLayer();
             }
@@ -46,8 +46,8 @@ namespace CentralizedThermalDistribution
                 return;
             }
 
-            var compAirFlow = building.GetComps<CompCoolantFlow>()
-                .FirstOrDefault(x => x.FlowType == FlowType || x.FlowType == CoolantPipeColor.Any);
+            var compAirFlow = building.GetComps<CompCoolant>()
+                .FirstOrDefault(x => x.pipeColor == FlowType || x.pipeColor == CoolantPipeColor.Any);
             compAirFlow?.PrintForGrid(this, FlowType);
         }
     }

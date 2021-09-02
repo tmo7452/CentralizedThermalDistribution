@@ -5,11 +5,11 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantFlowTempControl : CompCoolantFlow
+    public class CompCoolantCCU : CompCoolant
     {
-        public const string TemperatureArrowKey = "CentralizedClimateControl.Producer.TemperatureArrow";
-        public const string TargetTemperatureKey = "CentralizedClimateControl.Producer.TargetTemperature";
-        public const string ExhaustBlockedKey = "CentralizedClimateControl.Producer.ExhaustBlocked";
+        public const string TemperatureArrowKey = "CentralizedThermalDistribution.Producer.TemperatureArrow";
+        public const string TargetTemperatureKey = "CentralizedThermalDistribution.Producer.TargetTemperature";
+        public const string ExhaustBlockedKey = "CentralizedThermalDistribution.Producer.ExhaustBlocked";
 
         private const float DeltaSmooth = 96.0f;
         public float ConvertedTemperature;
@@ -40,7 +40,7 @@ namespace CentralizedThermalDistribution
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine(parent.LabelCap + " CompAirFlow:");
-                stringBuilder.AppendLine("   AirFlow IsOperating: " + IsOperating());
+                stringBuilder.AppendLine("   AirFlow IsOperating: " + IsConnected());
                 return stringBuilder.ToString();
             }
         }
@@ -51,7 +51,7 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused Flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            CentralizedClimateControlUtility.GetNetManager(parent.Map).RegisterTempControl(this);
+            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterTempControl(this);
             FlickableComp = parent.GetComp<CompFlickable>();
 
             base.PostSpawnSetup(respawningAfterLoad);
@@ -63,8 +63,8 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedClimateControlUtility.GetNetManager(map).DeregisterTempControl(this);
-            ResetFlowVariables();
+            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterTempControl(this);
+            ResetCoolantVariables();
             base.PostDeSpawn(map);
         }
 
@@ -98,7 +98,7 @@ namespace CentralizedThermalDistribution
                 return str;
             }
 
-            if (IsOperating())
+            if (IsConnected())
             {
                 //var intake = IntakeTemperature.ToStringTemperature("F0");
                 //var converted = ConvertedTemperature.ToStringTemperature("F0");
@@ -115,7 +115,7 @@ namespace CentralizedThermalDistribution
         /// <summary>
         ///     Reset the Flow Variables for Producers and Forward the Control to Base class for more reset.
         /// </summary>
-        public override void ResetFlowVariables()
+        public override void ResetCoolantVariables()
         {
             DeltaTemperature = 0.0f;
             TargetTemperature = 21.0f;
@@ -126,7 +126,7 @@ namespace CentralizedThermalDistribution
             IsBrokenDown = false;
             IsPoweredOff = false;
 
-            base.ResetFlowVariables();
+            base.ResetCoolantVariables();
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace CentralizedThermalDistribution
         /// <param name="compTempControl">Current Temperature Control Component of the Building</param>
         public void TickRare(CompTempControl compTempControl)
         {
-            IntakeTemperature = AirFlowNet.AverageIntakeTemperature;
+            IntakeTemperature = coolantNet.AverageIntakeTemperature;
             TargetTemperature = compTempControl.targetTemperature;
             ConvertedTemperature = IntakeTemperature + DeltaTemperature;
 
@@ -155,7 +155,7 @@ namespace CentralizedThermalDistribution
                 return false;
             }
 
-            return AirFlowNet.Producers.Count != 0 && !IsBlocked;
+            return coolantNet.Producers.Count != 0 && !IsBlocked;
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace CentralizedThermalDistribution
             //var deltaSmoothened = (targetDelta - currentDelta) / DeltaSmooth;
             //DeltaTemperature += (compTempControl.Props.energyPerSecond * AirFlowNet.ThermalEfficiency) * deltaSmoothened;
             DeltaTemperature += compTempControl.Props.energyPerSecond
-                                * AirFlowNet.ThermalEfficiency
+                                * coolantNet.ThermalEfficiency
                                 * ((targetDelta - currentDelta) / DeltaSmooth);
         }
     }

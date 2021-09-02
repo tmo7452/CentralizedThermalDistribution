@@ -6,18 +6,19 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CoolantFlowNetManager : MapComponent
+    public class CoolantNetManager : MapComponent
     {
         private const int RebuildValue = -2;
 
-        private readonly List<CoolantFlowNet> _backupNets = new List<CoolantFlowNet>();
-        private readonly int _pipeCount;
+        private readonly List<CoolantNet> _backupNets = new List<CoolantNet>();
+        private readonly int _pipeColors;
         private int _masterId;
-        public List<CompCoolantFlowConsumer> CachedConsumers = new List<CompCoolantFlowConsumer>();
-        public List<CoolantFlowNet> CachedNets = new List<CoolantFlowNet>();
-        public List<CompCoolantFlow> CachedPipes = new List<CompCoolantFlow>();
-        public List<CompCoolantFlowProducer> CachedProducers = new List<CompCoolantFlowProducer>();
-        public List<CompCoolantFlowTempControl> CachedTempControls = new List<CompCoolantFlowTempControl>();
+        public List<CompCoolantConditioner> CachedConditioners = new();
+        public List<CompCoolantConsumer> CachedConsumers = new();
+        public List<CoolantNet> CachedNets = new();
+        public List<CompCoolant> CachedPipes = new();
+        public List<CompCoolantProducer> CachedProducers = new List<CompCoolantProducer>();
+        //public List<CompCoolantFlowCCU> CachedTempControls = new List<CompCoolantFlowCCU>();
         public bool[] DirtyPipeFlag;
         public bool IsDirty;
 
@@ -29,17 +30,15 @@ namespace CentralizedThermalDistribution
         ///     - Mark Dirty for 1st reconstruction
         /// </summary>
         /// <param name="map">RimWorld Map Object</param>
-        public CoolantFlowNetManager(Map map) : base(map)
+        public CoolantNetManager(Map map) : base(map)
         {
-            var length = Enum.GetValues(typeof(CoolantPipeColor)).Length;
+            _pipeColors = Enum.GetValues(typeof(CoolantPipeColor)).Length;
             //var num = map.AllCells.Count();
-            //PipeGrid = new int[length, num];
-            PipeGrid = new int[length, map.AllCells.Count()];
+            //PipeGrid = new int[_pipeColors, num];
+            PipeGrid = new int[_pipeColors, map.AllCells.Count()];
 
-            _pipeCount = length;
-
-            DirtyPipeFlag = new bool[length];
-            for (var i = 0; i < DirtyPipeFlag.Length; i++)
+            DirtyPipeFlag = new bool[_pipeColors];
+            for (var i = 0; i < _pipeColors; i++)
             {
                 DirtyPipeFlag[i] = true;
 
@@ -56,7 +55,7 @@ namespace CentralizedThermalDistribution
         ///     Register a Pipe to the Manager
         /// </summary>
         /// <param name="pipe">A Pipe's AirFlow Component</param>
-        public void RegisterPipe(CompCoolantFlow pipe)
+        public void RegisterPipe(CompCoolant pipe)
         {
             if (!CachedPipes.Contains(pipe))
             {
@@ -73,7 +72,7 @@ namespace CentralizedThermalDistribution
         ///     Remove a Pipe from the Manager
         /// </summary>
         /// <param name="pipe">The Pipe's AirFlow Component</param>
-        public void DeregisterPipe(CompCoolantFlow pipe)
+        public void DeregisterPipe(CompCoolant pipe)
         {
             if (CachedPipes.Contains(pipe))
             {
@@ -86,33 +85,72 @@ namespace CentralizedThermalDistribution
             IsDirty = true;
         }
 
+        
         /// <summary>
         ///     Register a Climate Control Device
         /// </summary>
         /// <param name="device">Climate Control Component</param>
-        public void RegisterTempControl(CompCoolantFlowTempControl device)
+        public void RegisterTempControl(CompCoolantCCU device)
         {
+            /*
             if (!CachedTempControls.Contains(device))
             {
                 CachedTempControls.Add(device);
                 CachedTempControls.Shuffle(); // ! Why Shuffle?  --Brain
-            }
+            }*/
 
             // Useless function call --Brain
+            // DirtyPipeGrid();
+            IsDirty = true;
+            
+        }
+
+        
+        /// <summary>
+        ///     Deregister a Climate Control Object from the Manager
+        /// </summary>
+        /// <param name="device">Climate Control Component</param>
+        public void DeregisterTempControl(CompCoolantCCU device)
+        {
+            /*
+            if (CachedTempControls.Contains(device))
+            {
+                CachedTempControls.Remove(device);
+                CachedTempControls.Shuffle(); // ! Why Shuffle?  --Brain
+            }*/
+
+            // Useless function call  --Brain
             // DirtyPipeGrid();
             IsDirty = true;
         }
 
         /// <summary>
-        ///     Deregister a Climate Control Object from the Manager
+        ///     Register a Air Flow Producer
         /// </summary>
-        /// <param name="device">Climate Control Component</param>
-        public void DeregisterTempControl(CompCoolantFlowTempControl device)
+        /// <param name="pipe">Producer's Air Flow Component</param>
+        public void RegisterConditioner(CompCoolantConditioner pipe)
         {
-            if (CachedTempControls.Contains(device))
+            if (!CachedConditioners.Contains(pipe))
             {
-                CachedTempControls.Remove(device);
-                CachedTempControls.Shuffle(); // ! Why Shuffle?  --Brain
+                CachedConditioners.Add(pipe);
+                CachedConditioners.Shuffle(); // ! Why Shuffle?  --Brain
+            }
+
+            // Useless function call  --Brain
+            // DirtyPipeGrid();
+            IsDirty = true;
+        }
+
+        /// <summary>
+        ///     Deregister a Producer from the Network Manager
+        /// </summary>
+        /// <param name="pipe">Producer's Component</param>
+        public void DeregisterConditioner(CompCoolantConditioner pipe)
+        {
+            if (CachedConditioners.Contains(pipe))
+            {
+                CachedConditioners.Remove(pipe);
+                CachedConditioners.Shuffle(); // ! Why Shuffle?  --Brain
             }
 
             // Useless function call  --Brain
@@ -124,7 +162,7 @@ namespace CentralizedThermalDistribution
         ///     Register a Air Flow Producer
         /// </summary>
         /// <param name="pipe">Producer's Air Flow Component</param>
-        public void RegisterProducer(CompCoolantFlowProducer pipe)
+        public void RegisterProducer(CompCoolantProducer pipe)
         {
             if (!CachedProducers.Contains(pipe))
             {
@@ -141,7 +179,7 @@ namespace CentralizedThermalDistribution
         ///     Deregister a Producer from the Network Manager
         /// </summary>
         /// <param name="pipe">Producer's Component</param>
-        public void DeregisterProducer(CompCoolantFlowProducer pipe)
+        public void DeregisterProducer(CompCoolantProducer pipe)
         {
             if (CachedProducers.Contains(pipe))
             {
@@ -158,7 +196,7 @@ namespace CentralizedThermalDistribution
         ///     Register an Air Flow Consumer to the Network Manager
         /// </summary>
         /// <param name="device">Consumer's Air Flow Component</param>
-        public void RegisterConsumer(CompCoolantFlowConsumer device)
+        public void RegisterConsumer(CompCoolantConsumer device)
         {
             if (!CachedConsumers.Contains(device))
             {
@@ -175,7 +213,7 @@ namespace CentralizedThermalDistribution
         ///     Deregister a Consumer from the Network Manager
         /// </summary>
         /// <param name="device">Consumer's Air Flow Component</param>
-        public void DeregisterConsumer(CompCoolantFlowConsumer device)
+        public void DeregisterConsumer(CompCoolantConsumer device)
         {
             if (CachedConsumers.Contains(device))
             {
@@ -212,9 +250,9 @@ namespace CentralizedThermalDistribution
         /// <param name="pos">Position of the cell</param>
         /// <param name="flowType">Airflow type</param>
         /// <returns>Boolean result if pipe exists at cell or not</returns>
-        public bool ZoneAt(IntVec3 pos, CoolantPipeColor flowType)
+        public bool ZoneAt(IntVec3 pos, CoolantPipeColor pipeColor)
         {
-            return PipeGrid[(int)flowType, map.cellIndices.CellToIndex(pos)] != RebuildValue;
+            return PipeGrid[(int)pipeColor, map.cellIndices.CellToIndex(pos)] != RebuildValue;
         }
 
         /// <summary>
@@ -224,9 +262,9 @@ namespace CentralizedThermalDistribution
         /// <param name="flowType">Airflow type</param>
         /// <param name="id">GridID to check for</param>
         /// <returns>Boolean result if perfect pipe exists at cell or not</returns>
-        public bool PerfectMatch(IntVec3 pos, CoolantPipeColor flowType, int id)
+        public bool PerfectMatch(IntVec3 pos, CoolantPipeColor pipeColor, int id)
         {
-            return PipeGrid[(int)flowType, map.cellIndices.CellToIndex(pos)] == id;
+            return PipeGrid[(int)pipeColor, map.cellIndices.CellToIndex(pos)] == id;
         }
 
         /// <summary>
@@ -244,14 +282,14 @@ namespace CentralizedThermalDistribution
                 return;
             }
 
-            foreach (var compAirFlow in CachedPipes)
+            foreach (var compCoolant in CachedPipes)
             {
-                compAirFlow.GridID = RebuildValue;
+                compCoolant.GridID = RebuildValue;
             }
 
             _backupNets.Clear();
 
-            for (var i = 0; i < _pipeCount; i++)
+            for (var i = 0; i < _pipeColors; i++)
             {
                 if ((CoolantPipeColor)i == CoolantPipeColor.Any)
                 {
@@ -280,9 +318,9 @@ namespace CentralizedThermalDistribution
                 return;
             }
 
-            foreach (var airFlowNet in CachedNets)
+            foreach (var coolantNet in CachedNets)
             {
-                airFlowNet.AirFlowNetTick();
+                coolantNet.CoolantNetTick();
             }
 
             base.MapComponentTick();
@@ -291,15 +329,15 @@ namespace CentralizedThermalDistribution
         /// <summary>
         ///     Iterate on all the Occupied cells of a Cell. Here we can each Parent Occupied Rect cell.
         /// </summary>
-        /// <param name="compAirFlow">The Object under scan</param>
+        /// <param name="compCoolant">The Object under scan</param>
         /// <param name="gridId">Grid ID of the current Network</param>
-        /// <param name="flowIndex">Type of Air Flow</param>
+        /// <param name="pipeColor">Type of Air Flow</param>
         /// <param name="network">The Air Flow Network Object</param>
-        private void ParseParentCell(CompCoolantFlow compAirFlow, int gridId, int flowIndex, CoolantFlowNet network)
+        private void ParseParentCell(CompCoolant compCoolant, int gridId, int pipeColor, CoolantNet network)
         {
-            foreach (var current in compAirFlow.parent.OccupiedRect().EdgeCells)
+            foreach (var current in compCoolant.parent.OccupiedRect().EdgeCells)
             {
-                ScanCell(current, gridId, flowIndex, network);
+                ScanCell(current, gridId, pipeColor, network);
             }
         }
 
@@ -312,7 +350,7 @@ namespace CentralizedThermalDistribution
         /// <param name="gridId">Grid ID of the current Network</param>
         /// <param name="flowIndex">Type of Air Flow</param>
         /// <param name="network">The Air Flow Network Object</param>
-        public void ScanCell(IntVec3 pos, int gridId, int flowIndex, CoolantFlowNet network)
+        public void ScanCell(IntVec3 pos, int gridId, int pipeColor, CoolantNet network)
         {
             for (var i = 0; i < 4; i++)
             {
@@ -320,7 +358,7 @@ namespace CentralizedThermalDistribution
                 //var buildingList = thingList.OfType<Building>();
                 //var buildingList = (pos + GenAdj.CardinalDirections[i]).GetThingList(map).OfType<Building>();
 
-                var list = new List<CompCoolantFlow>();
+                var compList = new List<CompCoolant>();
 
                 //foreach (var current in buildingList)
                 foreach (var current in (pos + GenAdj.CardinalDirections[i]).GetThingList(map).OfType<Building>())
@@ -328,10 +366,10 @@ namespace CentralizedThermalDistribution
                     //var buildingAirComps = current.GetComps<CompAirFlow>().Where(item => item.FlowType == (AirFlowType)flowIndex || (item.FlowType == AirFlowType.Any && item.GridID == RebuildValue));
 
                     //foreach (var buildingAirComp in buildingAirComps)
-                    foreach (var buildingAirComp in current.GetComps<CompCoolantFlow>()
+                    foreach (var buildingAirComp in current.GetComps<CompCoolant>()
                         .Where(item =>
-                            item.FlowType == (CoolantPipeColor)flowIndex ||
-                            item.FlowType == CoolantPipeColor.Any && item.GridID == RebuildValue))
+                            item.pipeColor == (CoolantPipeColor)pipeColor ||
+                            item.pipeColor == CoolantPipeColor.Any && item.GridID == RebuildValue))
                     {
                         // var result = ValidateBuildingPriority(buildingAirComp, network);
                         // if(!result)
@@ -341,31 +379,31 @@ namespace CentralizedThermalDistribution
                         }
 
                         ValidateBuilding(buildingAirComp, network);
-                        list.Add(buildingAirComp);
+                        compList.Add(buildingAirComp);
                     }
                 }
 
-                if (!list.Any())
+                if (!compList.Any())
                 {
                     continue;
                 }
 
-                foreach (var compAirFlow in list)
+                foreach (var compCoolant in compList)
                 {
-                    if (compAirFlow.GridID != -2)
+                    if (compCoolant.GridID != -2)
                     {
                         continue;
                     }
 
                     //var iterator = compAirFlow.parent.OccupiedRect().GetIterator();
                     //while (!iterator.Done())
-                    foreach (var item in compAirFlow.parent.OccupiedRect())
+                    foreach (var item in compCoolant.parent.OccupiedRect())
                     {
-                        PipeGrid[flowIndex, map.cellIndices.CellToIndex(item)] = gridId;
+                        PipeGrid[pipeColor, map.cellIndices.CellToIndex(item)] = gridId;
                     }
 
-                    compAirFlow.GridID = gridId;
-                    ParseParentCell(compAirFlow, gridId, flowIndex, network);
+                    compCoolant.GridID = gridId;
+                    ParseParentCell(compCoolant, gridId, pipeColor, network);
                 }
             }
         }
@@ -373,37 +411,37 @@ namespace CentralizedThermalDistribution
         /// <summary>
         ///     Main rebuild function. We Rebuild all different pipetypes here.
         /// </summary>
-        /// <param name="flowIndex">Type of Pipe (Red, Blue, Cyan)</param>
-        private void RebuildPipeGrid(int flowIndex)
+        /// <param name="pipeColorIndex">Type of Pipe (Red, Blue, Cyan) as an integer</param>
+        private void RebuildPipeGrid(int pipeColorIndex)
         {
-            var flowType = (CoolantPipeColor)flowIndex;
+            var pipeColor = (CoolantPipeColor)pipeColorIndex;
 
-            var runtimeNets = new List<CoolantFlowNet>();
+            var runtimeNets = new List<CoolantNet>();
 
             for (var i = 0; i < PipeGrid.GetLength(1); i++)
             {
-                PipeGrid[flowIndex, i] = RebuildValue;
+                PipeGrid[pipeColorIndex, i] = RebuildValue;
             }
 
-            var cachedPipes = CachedPipes.Where(item => item.FlowType == flowType).ToList();
+            var cachedPipes = CachedPipes.Where(item => item.pipeColor == pipeColor).ToList();
 
 #if DEBUG
             Debug.Log("--- Start Rebuilding --- For Index: " + flowType);
             PrintPipes(cachedPipes);
 #endif
 
-            var listCopy = new List<CompCoolantFlow>(cachedPipes);
+            var listCopy = new List<CompCoolant>(cachedPipes);
 
-            for (var compAirFlow = listCopy.FirstOrDefault();
-                compAirFlow != null;
-                compAirFlow = listCopy.FirstOrDefault())
+            for (var compCoolant = listCopy.FirstOrDefault();
+                compCoolant != null;
+                compCoolant = listCopy.FirstOrDefault())
             {
-                compAirFlow.GridID = _masterId;
+                compCoolant.GridID = _masterId;
 
-                var network = new CoolantFlowNet
+                var network = new CoolantNet
                 {
-                    GridID = compAirFlow.GridID,
-                    FlowType = flowType
+                    GridID = compCoolant.GridID,
+                    FlowType = pipeColor
                 };
                 //network.GridID = compAirFlow.GridID;
                 //network.FlowType = flowType;
@@ -419,58 +457,58 @@ namespace CentralizedThermalDistribution
                 //var buildingList = thingList.OfType<Building>();
                 //var buildingList = compAirFlow.parent.Position.GetThingList(map).OfType<Building>();
                 //foreach (var current in buildingList)
-                foreach (var current in compAirFlow.parent.Position.GetThingList(map).OfType<Building>())
+                foreach (var building in compCoolant.parent.Position.GetThingList(map).OfType<Building>())
                 {
                     //var buildingAirComps = current.GetComps<CompAirFlow>().Where(item => item.FlowType == AirFlowType.Any && item.GridID == RebuildValue);
 
                     //foreach (var buildingAirComp in buildingAirComps)
-                    foreach (var buildingAirComp in current.GetComps<CompCoolantFlow>()
-                        .Where(item => item.FlowType == CoolantPipeColor.Any && item.GridID == RebuildValue))
+                    foreach (var buildingCoolantComp in building.GetComps<CompCoolant>()
+                        .Where(item => item.pipeColor == CoolantPipeColor.Any && item.GridID == RebuildValue))
                     {
                         //var result = ValidateBuildingPriority(buildingAirComp, network);
                         //if (!result)
-                        if (!ValidateBuildingPriority(buildingAirComp, network))
+                        if (!ValidateBuildingPriority(buildingCoolantComp, network))
                         {
                             continue;
                         }
 
-                        ValidateBuilding(buildingAirComp, network);
+                        ValidateBuilding(buildingCoolantComp, network);
                         //var itr = buildingAirComp.parent.OccupiedRect().GetIterator();
                         //while (!itr.Done())
-                        foreach (var item in buildingAirComp.parent.OccupiedRect())
+                        foreach (var item in buildingCoolantComp.parent.OccupiedRect())
                         {
-                            PipeGrid[flowIndex, map.cellIndices.CellToIndex(item)] = compAirFlow.GridID;
+                            PipeGrid[pipeColorIndex, map.cellIndices.CellToIndex(item)] = compCoolant.GridID;
                         }
 
-                        buildingAirComp.GridID = compAirFlow.GridID;
+                        buildingCoolantComp.GridID = compCoolant.GridID;
                     }
                 }
 
                 /* -------------------------------------------
                  *
-                 * Iterate the OccupiedRect of the Original compAirFlow (This is the Pipe)
+                 * Iterate the OccupiedRect of the Original compCoolant (This is the Pipe)
                  * So, We add the Pipe to the Grid.
                  *
                  * -------------------------------------------
                  */
                 //var iterator = compAirFlow.parent.OccupiedRect().GetIterator();
                 //while (!iterator.Done())
-                foreach (var item in compAirFlow.parent.OccupiedRect())
+                foreach (var item in compCoolant.parent.OccupiedRect())
                 {
-                    PipeGrid[flowIndex, map.cellIndices.CellToIndex(item)] = compAirFlow.GridID;
+                    PipeGrid[pipeColorIndex, map.cellIndices.CellToIndex(item)] = compCoolant.GridID;
                 }
 
-                ParseParentCell(compAirFlow, compAirFlow.GridID, flowIndex, network);
+                ParseParentCell(compCoolant, compCoolant.GridID, pipeColorIndex, network);
                 listCopy.RemoveAll(item => item.GridID != RebuildValue);
 
-                network.AirFlowNetTick();
+                network.CoolantNetTick();
 #if DEBUG
                 Debug.Log(network.DebugString());
 #endif
                 runtimeNets.Add(network);
             }
 
-            DirtyPipeFlag[flowIndex] = false;
+            DirtyPipeFlag[pipeColorIndex] = false;
 #if DEBUG
             Debug.Log("--- Done Rebuilding ---");
 #endif
@@ -482,11 +520,12 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="compAirFlow">Building Component</param>
         /// <param name="network">Current Network</param>
-        private static void ValidateBuilding(CompCoolantFlow compAirFlow, CoolantFlowNet network)
+        private static void ValidateBuilding(CompCoolant compCoolant, CoolantNet network)
         {
-            ValidateAsProducer(compAirFlow, network);
-            ValidateAsTempControl(compAirFlow, network);
-            ValidateAsConsumer(compAirFlow, network);
+            ValidateAsConditioner(compCoolant, network);
+            ValidateAsProducer(compCoolant, network);
+            //ValidateAsTempControl(compAirFlow, network);
+            ValidateAsConsumer(compCoolant, network);
         }
 
         /// <summary>
@@ -494,9 +533,9 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="compAirFlow">Building Component</param>
         /// <param name="network">Current Network</param>
-        private static void ValidateAsConsumer(CompCoolantFlow compAirFlow, CoolantFlowNet network)
+        private static void ValidateAsConsumer(CompCoolant compAirFlow, CoolantNet network)
         {
-            if (!(compAirFlow is CompCoolantFlowConsumer consumer))
+            if (!(compAirFlow is CompCoolantConsumer consumer))
             {
                 return;
             }
@@ -506,7 +545,7 @@ namespace CentralizedThermalDistribution
                 network.Consumers.Add(consumer);
             }
 
-            consumer.AirFlowNet = network;
+            consumer.coolantNet = network;
         }
 
         /// <summary>
@@ -518,14 +557,14 @@ namespace CentralizedThermalDistribution
         /// <param name="compAirFlow">Building Component</param>
         /// <param name="network">Current Network</param>
         /// <returns>Result if we can add the Building to existing Network</returns>
-        private static bool ValidateBuildingPriority(CompCoolantFlow compAirFlow, CoolantFlowNet network)
+        private static bool ValidateBuildingPriority(CompCoolant compAirFlow, CoolantNet network)
         {
             if (compAirFlow == null)
             {
                 return false;
             }
 
-            if (!(compAirFlow is CompCoolantFlowConsumer consumer))
+            if (!(compAirFlow is CompCoolantConsumer consumer))
             {
                 return true;
             }
@@ -541,13 +580,33 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
+        ///     Validate Building as coolant conditioner
+        /// </summary>
+        /// <param name="compCoolant">Building Component</param>
+        /// <param name="network">Current Network</param>
+        private static void ValidateAsConditioner(CompCoolant compCoolant, CoolantNet network)
+        {
+            if (!(compCoolant is CompCoolantConditioner conditioner))
+            {
+                return;
+            }
+
+            if (!network.Conditioners.Contains(conditioner))
+            {
+                network.Conditioners.Add(conditioner);
+            }
+
+            conditioner.coolantNet = network;
+        }
+
+        /// <summary>
         ///     Validate Building as Air Flow Producer
         /// </summary>
         /// <param name="compAirFlow">Building Component</param>
         /// <param name="network">Current Network</param>
-        private static void ValidateAsProducer(CompCoolantFlow compAirFlow, CoolantFlowNet network)
+        private static void ValidateAsProducer(CompCoolant compAirFlow, CoolantNet network)
         {
-            if (!(compAirFlow is CompCoolantFlowProducer producer))
+            if (!(compAirFlow is CompCoolantProducer producer))
             {
                 return;
             }
@@ -557,17 +616,18 @@ namespace CentralizedThermalDistribution
                 network.Producers.Add(producer);
             }
 
-            producer.AirFlowNet = network;
+            producer.coolantNet = network;
         }
 
+        /*
         /// <summary>
         ///     Validate Building as Climate Control Building
         /// </summary>
         /// <param name="compAirFlow">Building Component</param>
         /// <param name="network">Current Network</param>
-        private static void ValidateAsTempControl(CompCoolantFlow compAirFlow, CoolantFlowNet network)
+        private static void ValidateAsTempControl(CompCoolantFlow compAirFlow, CoolantNet network)
         {
-            if (!(compAirFlow is CompCoolantFlowTempControl tempControl))
+            if (!(compAirFlow is CompCoolantFlowCCU tempControl))
             {
                 return;
             }
@@ -578,19 +638,19 @@ namespace CentralizedThermalDistribution
             }
 
             tempControl.AirFlowNet = network;
-        }
+        }*/
 
         /// <summary>
         ///     Print the Pipes for Debug
         /// </summary>
         /// <param name="comps">Pipe List</param>
-        private void PrintPipes(IEnumerable<CompCoolantFlow> comps)
+        private void PrintPipes(IEnumerable<CompCoolant> comps)
         {
             var str = "\nPrinting CompAirFlows -";
 
-            foreach (var compAirFlow in comps)
+            foreach (var compCoolant in comps)
             {
-                str += "\n  - " + compAirFlow.parent + " (GRID ID: " + compAirFlow.GridID + ") ";
+                str += "\n  - " + compCoolant.parent + " (GRID ID: " + compCoolant.GridID + ") ";
             }
 
             Debug.Log(str);

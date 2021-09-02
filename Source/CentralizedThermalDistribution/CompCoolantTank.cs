@@ -3,7 +3,7 @@
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantFlowTank : CompCoolantFlow
+    public class CompCoolantTank : CompCoolant
     {
     }
 }

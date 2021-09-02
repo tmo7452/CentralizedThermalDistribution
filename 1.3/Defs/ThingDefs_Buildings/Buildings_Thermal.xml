@@ -5,19 +5,159 @@
   <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseThermalBuilding" ParentName="BuildingBase">
     <category>Building</category>
     <thingClass>Building</thingClass>
-    <minifiedDef>MinifiedThing</minifiedDef>
+    <!-- <minifiedDef>MinifiedThing</minifiedDef> -->
     <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
     <selectable>true</selectable>
     <drawerType>MapMeshAndRealTime</drawerType>
     <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
     <repairEffect>Repair</repairEffect>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
-    <thingCategories>
+    <!-- <thingCategories>
       <li>BuildingsClimate</li>
-    </thingCategories>
+    </thingCategories> -->
     <statBases>
       <Beauty>-10</Beauty>
     </statBases>
+  </ThingDef>
+  
+    <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
+    <defName>AirSourceCondenserSmall</defName>
+    <label>Small condenser</label>
+    <thingClass>CentralizedThermalDistribution.Building_AirSourceCondenser</thingClass>
+    <graphicData>
+      <texPath>Things/Building/CondenserSmall</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <size>(1,1)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>0.80</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>0.8</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>1600</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>20</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <description>Decreases coolant temperature by heating the surrounding air.</description>
+    <costList>
+      <Steel>100</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>400</basePowerConsumption>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantConditioner</compClass>
+        <baseAirFlow>300.0</baseAirFlow>
+        <flowType>Any</flowType>
+        <ThermalWorkMultiplier>-1.00</ThermalWorkMultiplier>
+        <ConditionerMaxTemperatureDelta>60.0</ConditionerMaxTemperatureDelta>
+      </li>
+      <li Class="CompProperties_TempControl">
+        <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CTD_Condenser</designatorDropdown>
+    <designationHotKey>Misc4</designationHotKey>
+    <researchPrerequisites>
+      <li>BasicThermalDistribution</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_IntakeFan</li>
+    </placeWorkers>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
+    <defName>AirSourceHeatPumpSmall</defName>
+    <label>Small heat pump</label>
+    <thingClass>CentralizedThermalDistribution.Building_AirSourceCondenser</thingClass>
+    <graphicData>
+      <texPath>Things/Building/HeatPumpSmall</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <size>(1,1)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>0.80</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>0.8</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>1600</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>20</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <description>Increases coolant temperature by cooling the surrounding air.</description>
+    <costList>
+      <Steel>100</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>400</basePowerConsumption>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantConditioner</compClass>
+        <baseAirFlow>300.0</baseAirFlow>
+        <flowType>Any</flowType>
+        <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
+        <ConditionerMaxTemperatureDelta>45.0</ConditionerMaxTemperatureDelta>
+      </li>
+      <li Class="CompProperties_TempControl">
+        <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CTD_Condenser</designatorDropdown>
+    <designationHotKey>Misc4</designationHotKey>
+    <researchPrerequisites>
+      <li>BasicThermalDistribution</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_IntakeFan</li>
+    </placeWorkers>
   </ThingDef>
   
   <!--

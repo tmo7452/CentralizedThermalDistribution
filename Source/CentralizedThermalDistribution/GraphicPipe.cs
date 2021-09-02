@@ -45,7 +45,7 @@ namespace CentralizedThermalDistribution
         public override bool ShouldLinkWith(IntVec3 vec, Thing parent)
         {
             return vec.InBounds(parent.Map) &&
-                   CentralizedClimateControlUtility.GetNetManager(parent.Map).ZoneAt(vec, FlowType);
+                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).ZoneAt(vec, FlowType);
         }
 
 
@@ -76,7 +76,7 @@ namespace CentralizedThermalDistribution
                 var intVec = parent.Position + GenAdj.CardinalDirections[i];
 
                 if (!intVec.InBounds(parent.Map) ||
-                    !CentralizedClimateControlUtility.GetNetManager(parent.Map).ZoneAt(intVec, FlowType) ||
+                    !CentralizedThermalDistributionUtility.GetNetManager(parent.Map).ZoneAt(intVec, FlowType) ||
                     intVec.GetTerrain(parent.Map).layerable)
                 {
                     continue;

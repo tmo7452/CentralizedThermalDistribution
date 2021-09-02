@@ -6,7 +6,7 @@ namespace CentralizedThermalDistribution
 {
     public class Building_CCU : Building_CoolantFlowControl
     {
-        public CompCoolantFlowTempControl CompAirFlowTempControl;
+        public CompCoolantCCU CompAirFlowTempControl;
         public CompTempControl CompTempControl;
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace CentralizedThermalDistribution
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             CompTempControl = GetComp<CompTempControl>();
-            CompAirFlowTempControl = GetComp<CompCoolantFlowTempControl>();
+            CompAirFlowTempControl = GetComp<CompCoolantCCU>();
             base.SpawnSetup(map, respawningAfterLoad);
         }
 
@@ -36,7 +36,7 @@ namespace CentralizedThermalDistribution
             CompAirFlowTempControl.IsPoweredOff = false;
             CompAirFlowTempControl.IsBrokenDown = this.IsBrokenDown();
 
-            if (!CompAirFlowTempControl.IsOperating())
+            if (!CompAirFlowTempControl.IsConnected())
             {
                 return;
             }

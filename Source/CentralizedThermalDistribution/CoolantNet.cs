@@ -4,28 +4,32 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CoolantFlowNet
+    public class CoolantNet
     {
-        public float AverageConvertedTemperature;
+        public bool NetIsActive = false;
+        public float NetCoolantTemperature = 0.0f;
+        public List<CompCoolantConditioner> Conditioners = new();
 
-        public float AverageIntakeTemperature;
+        public float AverageConvertedTemperature; // Delete
 
-        public List<CompCoolantFlow> Connectors = new List<CompCoolantFlow>();
-        public List<CompCoolantFlowConsumer> Consumers = new List<CompCoolantFlowConsumer>();
-        public float FlowEfficiency = 1.0f;
+        public float AverageIntakeTemperature; // Delete
+
+        public List<CompCoolant> Connectors = new List<CompCoolant>();
+        public List<CompCoolantConsumer> Consumers = new List<CompCoolantConsumer>(); // Delete?
+        public float FlowEfficiency = 1.0f; // Delete
 
         public CoolantPipeColor FlowType;
-        public List<CompCoolantFlowProducer> Producers = new List<CompCoolantFlowProducer>();
-        public List<CompCoolantFlowTempControl> TempControls = new List<CompCoolantFlowTempControl>();
+        public List<CompCoolantProducer> Producers = new List<CompCoolantProducer>(); // Delete
+        //public List<CompCoolantFlowCCU> TempControls = new List<CompCoolantFlowCCU>(); // Delete
 
-        public float ThermalCapacity;
-        public float ThermalEfficiency = 1.0f;
+        public float ThermalCapacity; // Delete
+        public float ThermalEfficiency = 1.0f; // Delete
 
         public int GridID { get; set; } = -2;
 
-        public float CurrentIntakeAir { get; private set; }
+        public float CurrentIntakeAir { get; private set; } // Delete
 
-        public float CurrentExhaustAir { get; private set; }
+        public float CurrentExhaustAir { get; private set; } // Delete
 
         /// <summary>
         ///     Tick the Producers of Air Flow.
@@ -39,7 +43,7 @@ namespace CentralizedThermalDistribution
 
             foreach (var producer in Producers)
             {
-                if (!producer.IsOperating() || !producer.IsActive())
+                if (!producer.IsConnected() || !producer.IsActive())
                 {
                     continue;
                 }
@@ -63,6 +67,49 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
+        ///     Tick the coolant conditioners.
+        ///     We calculate ...
+        /// </summary>
+        private void TickConditioners()
+        {
+            int activeCount = 0;
+            float massSum = 0;
+            float energySum = 0f; 
+
+            foreach (var conditioner in Conditioners)
+            {
+                if (!conditioner.IsConnected() || !conditioner.IsActive())
+                {
+                    continue;
+                }
+
+                massSum += conditioner.CoolantThermalMass;
+                energySum += conditioner.CoolantThermalMass * conditioner.CoolantTemperature;
+                activeCount++;
+            }
+
+            if (activeCount > 0)
+            {
+                NetIsActive = true;
+                NetCoolantTemperature = energySum / massSum;
+
+                foreach (var conditioner in Conditioners)
+                {
+                    if (!conditioner.IsConnected() || !conditioner.IsActive())
+                    {
+                        continue;
+                    }
+
+                    conditioner.CoolantTemperature = NetCoolantTemperature;
+                }
+            }
+            else
+            {
+                NetIsActive = false;
+            }
+        }
+
+        /// <summary>
         ///     Process the Consumers for a Tick. Consumers are the ones who consume Air Flow. They can be Vents (for now).
         ///     We calculate the total Exhaust capacity of the Network. This Exhaust Capacity is used by the Flow Efficiency
         ///     Attribute.
@@ -73,7 +120,7 @@ namespace CentralizedThermalDistribution
 
             foreach (var consumer in Consumers)
             {
-                if (!consumer.IsOperating())
+                if (!consumer.IsConnected())
                 {
                     continue;
                 }
@@ -84,6 +131,7 @@ namespace CentralizedThermalDistribution
             CurrentExhaustAir = airFlow;
         }
 
+        /*
         /// <summary>
         ///     Process the Buildings that Control Climate. Generally, the Climate Control Units.
         ///     Here, we process variables to be used to Thermal Efficiency.
@@ -117,13 +165,43 @@ namespace CentralizedThermalDistribution
                 ThermalCapacity = CurrentIntakeAir;
                 AverageConvertedTemperature = AverageIntakeTemperature;
             }
+        }*/
+
+        /// <summary>
+        ///     Register a coolant conditioner in the Network.
+        /// </summary>
+        /// <param name="conditioner">The Producer's Component</param>
+        public void RegisterConditioner(CompCoolantConditioner conditioner)
+        {
+            if (Conditioners.Contains(conditioner))
+            {
+                Log.Error("AirFlowNet registered producer it already had: " + conditioner);
+                return;
+            }
+
+            Conditioners.Add(conditioner);
+        }
+
+        /// <summary>
+        ///     De-register a coolant conditioner in the Network.
+        /// </summary>
+        /// <param name="conditioner">The Producer's Component</param>
+        public void DeregisterConditioner(CompCoolantConditioner conditioner)
+        {
+            if (!Conditioners.Contains(conditioner))
+            {
+                Log.Error("AirFlowNet de-registered producer it already removed: " + conditioner);
+                return;
+            }
+
+            Conditioners.Remove(conditioner);
         }
 
         /// <summary>
         ///     Register a Producer of Air Flow in the Network.
         /// </summary>
         /// <param name="producer">The Producer's Component</param>
-        public void RegisterProducer(CompCoolantFlowProducer producer)
+        public void RegisterProducer(CompCoolantProducer producer)
         {
             if (Producers.Contains(producer))
             {
@@ -138,7 +216,7 @@ namespace CentralizedThermalDistribution
         ///     De-register a Producer in the Network.
         /// </summary>
         /// <param name="producer">The Producer's Component</param>
-        public void DeregisterProducer(CompCoolantFlowProducer producer)
+        public void DeregisterProducer(CompCoolantProducer producer)
         {
             if (!Producers.Contains(producer))
             {
@@ -154,10 +232,11 @@ namespace CentralizedThermalDistribution
         ///     We Calculate the Flow Efficiency (FE) and Thermal Efficiency (TE).
         ///     FE & TEs are recorded for each individual network.
         /// </summary>
-        public void AirFlowNetTick()
+        public void CoolantNetTick()
         {
+            TickConditioners();
             TickProducers();
-            TickTempControllers();
+            //TickTempControllers();
             TickConsumers();
 
             if (CurrentIntakeAir > 0)
@@ -185,6 +264,15 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
+        ///     Check if the coolant network is active. That is, if it has any active conditioners.
+        /// </summary>
+        /// <returns>Boolean Active State</returns>
+        public bool IsActive()
+        {
+            return NetIsActive;
+        }
+
+        /// <summary>
         ///     Print the Debug String for this Network
         /// </summary>
         /// <returns>Multi-line String containing Output</returns>
@@ -203,11 +291,11 @@ namespace CentralizedThermalDistribution
                 stringBuilder.AppendLine("      " + current.parent);
             }
 
-            stringBuilder.AppendLine("  TempControls: ");
-            foreach (var current in TempControls)
-            {
-                stringBuilder.AppendLine("      " + current.parent);
-            }
+            //stringBuilder.AppendLine("  TempControls: ");
+            //foreach (var current in TempControls)
+            //{
+            //    stringBuilder.AppendLine("      " + current.parent);
+            //}
 
             stringBuilder.AppendLine("  Consumers: ");
             foreach (var current in Consumers)

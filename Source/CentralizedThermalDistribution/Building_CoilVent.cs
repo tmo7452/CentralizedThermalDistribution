@@ -6,7 +6,7 @@ namespace CentralizedThermalDistribution
 {
     public class Building_CoilVent : Building
     {
-        public CompCoolantFlowConsumer CompAirFlowConsumer;
+        public CompCoolantConsumer CompAirFlowConsumer;
 
         /// <summary>
         ///     Building spawned on the map
@@ -16,7 +16,7 @@ namespace CentralizedThermalDistribution
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            CompAirFlowConsumer = GetComp<CompCoolantFlowConsumer>();
+            CompAirFlowConsumer = GetComp<CompCoolantConsumer>();
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace CentralizedThermalDistribution
 
             if (CompAirFlowConsumer != null)
             {
-                yield return CentralizedClimateControlUtility.GetPipeSwitchToggle(CompAirFlowConsumer);
+                yield return CentralizedThermalDistributionUtility.GetPipeSwitchToggle(CompAirFlowConsumer);
             }
         }
 
@@ -45,7 +45,7 @@ namespace CentralizedThermalDistribution
         {
             CompAirFlowConsumer.TickRare();
 
-            if (!CompAirFlowConsumer.IsOperating())
+            if (!CompAirFlowConsumer.IsConnected())
             {
                 return;
             }

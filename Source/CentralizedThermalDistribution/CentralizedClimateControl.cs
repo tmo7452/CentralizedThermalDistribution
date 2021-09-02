@@ -2,8 +2,8 @@
 
 namespace CentralizedThermalDistribution
 {
-    public class CentralizedClimateControl : ModBase
+    public class CentralizedThermalDistribution : ModBase
     {
-        public override string ModIdentifier => "CentralizedClimateControl";
+        public override string ModIdentifier => "CentralizedThermalDistribution";
     }
 }

@@ -2,30 +2,31 @@
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantFlow : ThingComp
+    // Member of a coolant network
+    public class CompCoolant : ThingComp
     {
-        public const string NotConnectedKey = "CentralizedClimateControl.AirFlowNetDisconnected";
-        public const string ConnectedKey = "CentralizedClimateControl.AirFlowNetConnected";
-        public const string AirTypeKey = "CentralizedClimateControl.AirType";
-        public const string HotAirKey = "CentralizedClimateControl.HotAir";
-        public const string ColdAirKey = "CentralizedClimateControl.ColdAir";
-        public const string FrozenAirKey = "CentralizedClimateControl.FrozenAir";
-        public const string TotalNetworkAirKey = "CentralizedClimateControl.TotalNetworkAir";
+        public const string NotConnectedKey = "CentralizedThermalDistribution.AirFlowNetDisconnected";
+        public const string ConnectedKey = "CentralizedThermalDistribution.AirFlowNetConnected";
+        public const string AirTypeKey = "CentralizedThermalDistribution.AirType";
+        public const string HotAirKey = "CentralizedThermalDistribution.HotAir";
+        public const string ColdAirKey = "CentralizedThermalDistribution.ColdAir";
+        public const string FrozenAirKey = "CentralizedThermalDistribution.FrozenAir";
+        public const string TotalNetworkAirKey = "CentralizedThermalDistribution.TotalNetworkAir";
 
-        public CoolantPipeColor FlowType => Props.flowType;
+        public CoolantPipeColor pipeColor => Props.flowType;
 
         public int GridID { get; set; } = -2;
 
-        public CoolantFlowNet AirFlowNet { get; set; }
+        public CoolantNet coolantNet { get; set; }
 
-        public CompProperties_CoolantFlow Props => (CompProperties_CoolantFlow)props;
+        public CompProperties_Coolant Props => (CompProperties_Coolant)props;
 
         /// <summary>
         ///     Reset the AirFlow Variables
         /// </summary>
-        public virtual void ResetFlowVariables()
+        public virtual void ResetCoolantVariables()
         {
-            AirFlowNet = null;
+            coolantNet = null;
             GridID = -1;
         }
 
@@ -35,7 +36,7 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            CentralizedClimateControlUtility.GetNetManager(parent.Map).RegisterPipe(this);
+            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterPipe(this);
             base.PostSpawnSetup(respawningAfterLoad);
         }
 
@@ -45,24 +46,19 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedClimateControlUtility.GetNetManager(map).DeregisterPipe(this);
-            ResetFlowVariables();
+            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterPipe(this);
+            ResetCoolantVariables();
 
             base.PostDeSpawn(map);
         }
 
         /// <summary>
-        ///     Check if Air Flow Component is Working.
-        ///     Must be connected to an AirFlow Network.
+        ///     Check if connected to coolant network.
         /// </summary>
         /// <returns></returns>
-        public virtual bool IsOperating()
+        public virtual bool IsConnected()
         {
-            // No need for a local variable if it is returned right away. --Brain
-            //bool isConnected = AirFlowNet != null;
-            //return isConnected;
-
-            return AirFlowNet != null;
+            return coolantNet != null;
         }
 
         /// <summary>
@@ -71,23 +67,26 @@ namespace CentralizedThermalDistribution
         /// <returns>String to be Displayed on the Component window</returns>
         public override string CompInspectStringExtra()
         {
-            if (!IsOperating())
+            if (!IsConnected())
             {
                 return NotConnectedKey.Translate();
             }
 
-            string res = ConnectedKey.Translate();
+            string output = ConnectedKey.Translate();
 
-            if (FlowType != CoolantPipeColor.Any)
+            if (pipeColor != CoolantPipeColor.Any)
             {
-                res += "\n";
-                res += GetAirTypeString(FlowType);
+                output += "\n";
+                output += GetAirTypeString(pipeColor);
             }
 
-            res += "\n";
-            res += TotalNetworkAirKey.Translate(AirFlowNet.CurrentIntakeAir);
+            output += "\nNet Active: " + coolantNet.NetIsActive;
+            output += "\nNet Coolant Temp: " + coolantNet.NetCoolantTemperature;
+            
+            //res += "\n";
+            //res += TotalNetworkAirKey.Translate(coolantNet.CurrentIntakeAir);
 
-            return res;
+            return output;
         }
 
         /// <summary>

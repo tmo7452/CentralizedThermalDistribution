@@ -57,7 +57,7 @@ namespace CentralizedThermalDistribution
             }
 
             return intVec.InBounds(parent.Map) &&
-                   CentralizedClimateControlUtility.GetNetManager(parent.Map).ZoneAt(intVec, FlowType);
+                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).ZoneAt(intVec, FlowType);
         }
 
         /// <summary>
@@ -76,18 +76,18 @@ namespace CentralizedThermalDistribution
 
                 var building = parent as Building;
 
-                var compAirFlow = building?.GetComps<CompCoolantFlow>().FirstOrDefault();
+                var compAirFlow = building?.GetComps<CompCoolant>().FirstOrDefault();
                 if (compAirFlow == null)
                 {
                     return;
                 }
 
-                if (compAirFlow.FlowType != FlowType && compAirFlow.FlowType != CoolantPipeColor.Any)
+                if (compAirFlow.pipeColor != FlowType && compAirFlow.pipeColor != CoolantPipeColor.Any)
                 {
                     return;
                 }
 
-                subGraphic = compAirFlow.FlowType == CoolantPipeColor.Any ? _anyGraphic : _flowGraphic;
+                subGraphic = compAirFlow.pipeColor == CoolantPipeColor.Any ? _anyGraphic : _flowGraphic;
 
                 Printer_Plane.PrintPlane(layer, vector, Vector2.one, LinkedDrawMatFrom(parent, item));
             }

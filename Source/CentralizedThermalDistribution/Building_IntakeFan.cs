@@ -9,7 +9,7 @@ namespace CentralizedThermalDistribution
         private const float EfficiencyLossPerWindCubeBlocked = 0.0076923077f;
         private readonly int _windCellsBlocked = 0;
 
-        public CompCoolantFlowProducer CompAirProducer;
+        public CompCoolantProducer CompAirProducer;
 
         /// <summary>
         ///     Building spawned on the map
@@ -19,7 +19,7 @@ namespace CentralizedThermalDistribution
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            CompAirProducer = GetComp<CompCoolantFlowProducer>();
+            CompAirProducer = GetComp<CompCoolantProducer>();
             CompAirProducer.Props.flowType = CoolantPipeColor.Any;
         }
 

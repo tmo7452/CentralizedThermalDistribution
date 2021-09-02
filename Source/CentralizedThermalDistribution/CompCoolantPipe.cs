@@ -1,6 +1,6 @@
 ﻿namespace CentralizedThermalDistribution
 {
-    public class CompCoolantFlowPipe : CompCoolantFlow
+    public class CompCoolantPipe : CompCoolant
     {
         /// <summary>
         ///     Component Inspection for Pipes
@@ -8,7 +8,10 @@
         /// <returns>String to Display for Pipes</returns>
         public override string CompInspectStringExtra()
         {
-            return GetAirTypeString(Props.flowType);
+            string output = GetAirTypeString(Props.flowType);
+            output += "\nConnected: " + IsConnected();
+            output += "\nGrid ID: " + GridID;
+            return output;
         }
     }
 }

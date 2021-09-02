@@ -37,9 +37,9 @@ namespace CentralizedThermalDistribution
 
                 var airVent = thingType as Building_CoilVent;
 
-                if (airVent.CompAirFlowConsumer.AirFlowNet != null)
+                if (airVent.CompAirFlowConsumer.coolantNet != null)
                 {
-                    type = airVent.CompAirFlowConsumer.AirFlowNet.FlowType;
+                    type = airVent.CompAirFlowConsumer.coolantNet.FlowType;
                 }
 
                 break;
@@ -89,7 +89,7 @@ namespace CentralizedThermalDistribution
             //if (list.Any(intVec => intVec.Impassable(map)))
             if (GenAdj.CellsAdjacent8Way(center, rot, def.Size).Any(intVec => intVec.Impassable(map)))
             {
-                return "CentralizedClimateControl.Consumer.SurroundAirVentPlaceError".Translate();
+                return "CentralizedThermalDistribution.Consumer.SurroundAirVentPlaceError".Translate();
             }
 
             return true;

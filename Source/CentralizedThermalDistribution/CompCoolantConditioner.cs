@@ -4,34 +4,17 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantFlowProducer : CompCoolantFlow
+    // Provides coolant flow and influences its temperature. At least one conditioner must be present on a network.
+    public class CompCoolantConditioner : CompCoolant
     {
-        public const string AirFlowOutputKey = "CentralizedClimateControl.AirFlowOutput";
-        public const string IntakeTempKey = "CentralizedClimateControl.Producer.IntakeTemperature";
-        public const string IntakeBlockedKey = "CentralizedClimateControl.Producer.IntakeBlocked";
+        public const string AirFlowOutputKey = "CentralizedThermalDistribution.AirFlowOutput";
+        public const string IntakeTempKey = "CentralizedThermalDistribution.Producer.IntakeTemperature";
+        public const string IntakeBlockedKey = "CentralizedThermalDistribution.Producer.IntakeBlocked";
 
-        public float CurrentAirFlow;
-        protected CompFlickable FlickableComp;
-        public float IntakeTemperature;
-        public bool IsBlocked = false;
-        public bool IsBrokenDown = false;
-
-        [Unsaved] public bool IsOperatingAtHighPower;
-
-        public bool IsPoweredOff = false;
-
-        public float AirFlowOutput
-        {
-            get
-            {
-                if (IsOperating())
-                {
-                    return CurrentAirFlow;
-                }
-
-                return 0.0f;
-            }
-        }
+        public bool ActiveOnNetwork = false; // Active on the coolant network.
+        public float CoolantThermalMass;
+        public float CoolantTemperature;
+        public float CurrentEnergyDelta = 0f;
 
         /// <summary>
         ///     Debug String for a Air Flow Producer
@@ -43,8 +26,7 @@ namespace CentralizedThermalDistribution
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine(parent.LabelCap + " CompAirFlow:");
-                stringBuilder.AppendLine("   AirFlow IsOperating: " + IsOperating());
-                stringBuilder.AppendLine("   AirFlow Output: " + AirFlowOutput);
+                stringBuilder.AppendLine("   AirFlow IsOperating: " + IsConnected());
                 return stringBuilder.ToString();
             }
         }
@@ -55,9 +37,7 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused Flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            CentralizedClimateControlUtility.GetNetManager(parent.Map).RegisterProducer(this);
-            FlickableComp = parent.GetComp<CompFlickable>();
-
+            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterConditioner(this);
             base.PostSpawnSetup(respawningAfterLoad);
         }
 
@@ -67,8 +47,8 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedClimateControlUtility.GetNetManager(map).DeregisterProducer(this);
-            ResetFlowVariables();
+            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterConditioner(this);
+            ResetCoolantVariables();
             base.PostDeSpawn(map);
         }
 
@@ -78,8 +58,9 @@ namespace CentralizedThermalDistribution
         /// <returns>String Containing information for Producers</returns>
         public override string CompInspectStringExtra()
         {
+            
             var str = "";
-
+            /*
             if (IsPoweredOff || IsBrokenDown)
             {
                 return null;
@@ -91,20 +72,15 @@ namespace CentralizedThermalDistribution
                 return str;
             }
 
-            if (!IsOperating())
+            if (!IsConnected())
             {
                 return str + base.CompInspectStringExtra();
             }
 
-            //var convertedTemp = IntakeTemperature.ToStringTemperature("F0");
-            str += AirFlowOutputKey.Translate(AirFlowOutput.ToString("#####0")) + "\n";
-            //str += "\n";
-
-            //str += IntakeTempKey.Translate(convertedTemp) + "\n";
             str += IntakeTempKey.Translate(IntakeTemperature.ToStringTemperature("F0")) + "\n";
-            //str += "\n";
-
+            */
             return str + base.CompInspectStringExtra();
+            
         }
 
         /// <summary>
@@ -113,23 +89,17 @@ namespace CentralizedThermalDistribution
         /// <returns>Boolean Active State</returns>
         public bool IsActive()
         {
-            if (IsBlocked)
-            {
-                return false;
-            }
-
-            return !IsPoweredOff && !IsBrokenDown;
+            return ActiveOnNetwork;
         }
 
         /// <summary>
-        ///     Reset the Flow Variables for Producers and Forward the Control to Base class for more reset.
+        ///     Tick for Climate Control
+        ///     Here we calculate the growth of Delta Temperature which is increased or decrased based on Intake and Target
+        ///     Temperature.
         /// </summary>
-        public override void ResetFlowVariables()
+        public void TickRare()
         {
-            CurrentAirFlow = 0.0f;
-            IntakeTemperature = 0.0f;
-            IsOperatingAtHighPower = false;
-            base.ResetFlowVariables();
+            CoolantTemperature += CurrentEnergyDelta / CoolantThermalMass;
         }
     }
 }

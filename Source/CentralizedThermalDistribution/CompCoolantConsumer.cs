@@ -5,14 +5,14 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantFlowConsumer : CompCoolantFlow
+    public class CompCoolantConsumer : CompCoolant
     {
-        public const string AirFlowOutputKey = "CentralizedClimateControl.AirFlowOutput";
-        public const string IntakeTempKey = "CentralizedClimateControl.Consumer.ConvertedTemperature";
-        public const string FlowEfficiencyKey = "CentralizedClimateControl.Consumer.FlowEfficiencyKey";
-        public const string ThermalEfficiencyKey = "CentralizedClimateControl.Consumer.ThermalEfficiencyKey";
-        public const string DisconnectedKey = "CentralizedClimateControl.Consumer.Disconnected";
-        public const string ClosedKey = "CentralizedClimateControl.Consumer.Closed";
+        public const string AirFlowOutputKey = "CentralizedThermalDistribution.AirFlowOutput";
+        public const string IntakeTempKey = "CentralizedThermalDistribution.Consumer.ConvertedTemperature";
+        public const string FlowEfficiencyKey = "CentralizedThermalDistribution.Consumer.FlowEfficiencyKey";
+        public const string ThermalEfficiencyKey = "CentralizedThermalDistribution.Consumer.ThermalEfficiencyKey";
+        public const string DisconnectedKey = "CentralizedThermalDistribution.Consumer.Disconnected";
+        public const string ClosedKey = "CentralizedThermalDistribution.Consumer.Closed";
 
         private bool _alertChange;
         public CoolantPipeColorPriority AirTypePriority = CoolantPipeColorPriority.Auto;
@@ -22,9 +22,9 @@ namespace CentralizedThermalDistribution
 
         public float ExhaustAirFlow => Props.baseAirExhaust;
 
-        public float FlowEfficiency => AirFlowNet.FlowEfficiency;
+        public float FlowEfficiency => coolantNet.FlowEfficiency;
 
-        public float ThermalEfficiency => AirFlowNet.ThermalEfficiency;
+        public float ThermalEfficiency => coolantNet.ThermalEfficiency;
 
         /// <summary>
         ///     Debug String for AirFlow Consumer
@@ -46,7 +46,7 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused Flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            CentralizedClimateControlUtility.GetNetManager(parent.Map).RegisterConsumer(this);
+            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterConsumer(this);
             FlickableComp = parent.GetComp<CompFlickable>();
 
             base.PostSpawnSetup(respawningAfterLoad);
@@ -72,8 +72,8 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedClimateControlUtility.GetNetManager(map).DeregisterConsumer(this);
-            ResetFlowVariables();
+            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterConsumer(this);
+            ResetCoolantVariables();
             base.PostDeSpawn(map);
         }
 
@@ -88,7 +88,7 @@ namespace CentralizedThermalDistribution
                 return ClosedKey.Translate() + "\n" + base.CompInspectStringExtra();
             }
 
-            if (!IsOperating())
+            if (!IsConnected())
             {
                 return base.CompInspectStringExtra();
             }
@@ -105,12 +105,12 @@ namespace CentralizedThermalDistribution
             //var flowPercent = Mathf.FloorToInt(AirFlowNet.FlowEfficiency * 100) + "%";
             //str += "\n";
             //str += FlowEfficiencyKey.Translate(flowPercent);
-            str += FlowEfficiencyKey.Translate(Mathf.FloorToInt(AirFlowNet.FlowEfficiency * 100) + "%" + "\n");
+            str += FlowEfficiencyKey.Translate(Mathf.FloorToInt(coolantNet.FlowEfficiency * 100) + "%" + "\n");
 
             //var thermalPercent = Mathf.FloorToInt(AirFlowNet.ThermalEfficiency * 100) + "%";
             //str += "\n";
             //str += ThermalEfficiencyKey.Translate(thermalPercent);
-            str += ThermalEfficiencyKey.Translate(Mathf.FloorToInt(AirFlowNet.ThermalEfficiency * 100) + "%" + "\n");
+            str += ThermalEfficiencyKey.Translate(Mathf.FloorToInt(coolantNet.ThermalEfficiency * 100) + "%" + "\n");
 
             return str + base.CompInspectStringExtra();
         }
@@ -123,7 +123,7 @@ namespace CentralizedThermalDistribution
         {
             _alertChange = true;
             AirTypePriority = priority;
-            AirFlowNet = null;
+            coolantNet = null;
 #if DEBUG
             Debug.Log("Setting Priority to: " + AirTypePriority);
 #endif
@@ -138,39 +138,39 @@ namespace CentralizedThermalDistribution
         {
             if (_alertChange)
             {
-                //var manager = CentralizedClimateControlUtility.GetNetManager(parent.Map);
+                //var manager = CentralizedThermalDistributionUtility.GetNetManager(parent.Map);
                 //manager.IsDirty = true;
 
                 // Direct access is given, so we should use it  --Brain
-                CentralizedClimateControlUtility.GetNetManager(parent.Map).IsDirty = true;
+                CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsDirty = true;
                 _alertChange = false;
             }
 
-            if (!IsOperating())
+            if (!IsConnected())
             {
                 return;
             }
 
-            ConvertedTemperature = AirFlowNet.AverageConvertedTemperature;
+            ConvertedTemperature = coolantNet.AverageConvertedTemperature;
         }
 
-        public override bool IsOperating()
+        public override bool IsConnected()
         {
             if (!FlickableComp.SwitchIsOn)
             {
                 return false;
             }
 
-            return base.IsOperating();
+            return base.IsConnected();
         }
 
         /// <summary>
         ///     Reset the Flow Variables and Forward the Control to Base class for more reset.
         /// </summary>
-        public override void ResetFlowVariables()
+        public override void ResetCoolantVariables()
         {
             ConvertedTemperature = 0.0f;
-            base.ResetFlowVariables();
+            base.ResetCoolantVariables();
         }
 
         /// <summary>
@@ -180,12 +180,12 @@ namespace CentralizedThermalDistribution
         /// <returns>Boolean flag to show if Active</returns>
         public bool IsActive()
         {
-            if (AirFlowNet == null)
+            if (coolantNet == null)
             {
                 return false;
             }
 
-            return AirFlowNet.Producers.Count != 0 && AirFlowNet.Consumers.Count != 0;
+            return coolantNet.Producers.Count != 0 && coolantNet.Consumers.Count != 0;
         }
     }
 }

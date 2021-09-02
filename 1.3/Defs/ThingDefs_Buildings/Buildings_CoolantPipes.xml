@@ -75,8 +75,8 @@
     </building>
     <designationCategory>Temperature</designationCategory>
     <comps>
-      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
-        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantPipe</compClass>
         <flowType>Red</flowType>
       </li>
     </comps>
@@ -109,8 +109,8 @@
     </building>
     <designationCategory>Temperature</designationCategory>
     <comps>
-      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
-        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantPipe</compClass>
         <flowType>Red</flowType>
       </li>
     </comps>
@@ -144,8 +144,8 @@
     </building>
     <designationCategory>Temperature</designationCategory>
     <comps>
-      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
-        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantPipe</compClass>
         <flowType>Blue</flowType>
       </li>
     </comps>
@@ -178,8 +178,8 @@
     </building>
     <designationCategory>Temperature</designationCategory>
     <comps>
-      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
-        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantPipe</compClass>
         <flowType>Blue</flowType>
       </li>
     </comps>
@@ -213,8 +213,8 @@
     </building>
     <designationCategory>Temperature</designationCategory>
     <comps>
-      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
-        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantPipe</compClass>
         <flowType>Cyan</flowType>
       </li>
     </comps>
@@ -247,8 +247,8 @@
     </building>
     <designationCategory>Temperature</designationCategory>
     <comps>
-      <li Class="CentralizedThermalDistribution.CompProperties_CoolantFlow">
-        <compClass>CentralizedThermalDistribution.CompCoolantFlowPipe</compClass>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantPipe</compClass>
         <flowType>Cyan</flowType>
       </li>
     </comps>

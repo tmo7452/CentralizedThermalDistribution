@@ -4,7 +4,7 @@ namespace CentralizedThermalDistribution
 {
     public class Building_CoolantPipe : Building
     {
-        public CompCoolantFlowPipe CompAirFlowPipe;
+        public CompCoolantPipe CompAirFlowPipe;
         public CoolantPipeColor FlowType;
 
         /// <summary>
@@ -15,7 +15,7 @@ namespace CentralizedThermalDistribution
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            CompAirFlowPipe = GetComp<CompCoolantFlowPipe>();
+            CompAirFlowPipe = GetComp<CompCoolantPipe>();
         }
     }
 }

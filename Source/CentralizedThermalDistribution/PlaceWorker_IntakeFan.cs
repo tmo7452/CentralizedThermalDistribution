@@ -69,7 +69,7 @@ namespace CentralizedThermalDistribution
             //if (list.Any(intVec => intVec.Impassable(map)))
             if (GenAdj.CellsAdjacent8Way(center, rot, def.Size).Any(intVec => intVec.Impassable(map)))
             {
-                return "CentralizedClimateControl.Producer.IntakeFanPlaceError".Translate();
+                return "CentralizedThermalDistribution.Producer.IntakeFanPlaceError".Translate();
             }
 
             return true;
