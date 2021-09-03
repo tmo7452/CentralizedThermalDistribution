@@ -37,9 +37,9 @@ namespace CentralizedThermalDistribution
 
                 var airVent = thingType as Building_CoilVent;
 
-                if (airVent.CompAirFlowConsumer.coolantNet != null)
+                if (airVent.compCoolant.coolantNet != null)
                 {
-                    type = airVent.CompAirFlowConsumer.coolantNet.FlowType;
+                    type = airVent.compCoolant.coolantNet.PipeColor;
                 }
 
                 break;

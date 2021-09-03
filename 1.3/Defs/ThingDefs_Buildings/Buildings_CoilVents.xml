@@ -90,7 +90,7 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
         <flowType>Any</flowType>
-        <baseAirExhaust>50</baseAirExhaust>
+        <ThermalWorkMultiplier>1.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -129,7 +129,7 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
         <flowType>Any</flowType>
-        <baseAirExhaust>100</baseAirExhaust>
+        <ThermalWorkMultiplier>2.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -168,7 +168,7 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
         <flowType>Any</flowType>
-        <baseAirExhaust>300</baseAirExhaust>
+        <ThermalWorkMultiplier>4.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -209,7 +209,7 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
         <flowType>Any</flowType>
-        <baseAirExhaust>600</baseAirExhaust>
+        <ThermalWorkMultiplier>8.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>

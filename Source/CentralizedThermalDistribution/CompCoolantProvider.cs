@@ -4,8 +4,8 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    // Provides coolant flow and influences its temperature. At least one conditioner must be present on a network.
-    public class CompCoolantConditioner : CompCoolant
+    // Provides coolant flow and influences its temperature. At least one provider must be present on a network.
+    public class CompCoolantProvider : CompCoolantSwitchable
     {
         public const string AirFlowOutputKey = "CentralizedThermalDistribution.AirFlowOutput";
         public const string IntakeTempKey = "CentralizedThermalDistribution.Producer.IntakeTemperature";
@@ -14,22 +14,6 @@ namespace CentralizedThermalDistribution
         public bool ActiveOnNetwork = false; // Active on the coolant network.
         public float CoolantThermalMass;
         public float CoolantTemperature;
-        public float CurrentEnergyDelta = 0f;
-
-        /// <summary>
-        ///     Debug String for a Air Flow Producer
-        ///     Shows info about Air Flow etc.
-        /// </summary>
-        public string DebugString
-        {
-            get
-            {
-                var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine(parent.LabelCap + " CompAirFlow:");
-                stringBuilder.AppendLine("   AirFlow IsOperating: " + IsConnected());
-                return stringBuilder.ToString();
-            }
-        }
 
         /// <summary>
         ///     Post Spawn for Component
@@ -37,7 +21,7 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused Flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterConditioner(this);
+            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterProvider(this);
             base.PostSpawnSetup(respawningAfterLoad);
         }
 
@@ -47,7 +31,7 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterConditioner(this);
+            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterProvider(this);
             ResetCoolantVariables();
             base.PostDeSpawn(map);
         }
@@ -93,13 +77,13 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
-        ///     Tick for Climate Control
-        ///     Here we calculate the growth of Delta Temperature which is increased or decrased based on Intake and Target
-        ///     Temperature.
+        ///     Provided a thermal load value, this adjusts the internal coolant temp appropriately.
+        ///     Positive load to heat, negative load to cool.
         /// </summary>
-        public void TickRare()
+        /// <param name="ThermalLoad">Float amount Thermal Load to apply</param>
+        public void PushThermalLoad(float ThermalLoad)
         {
-            CoolantTemperature += CurrentEnergyDelta / CoolantThermalMass;
+            CoolantTemperature += ThermalLoad / CoolantThermalMass;
         }
     }
 }

@@ -67,11 +67,11 @@
         <basePowerConsumption>400</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConditioner</compClass>
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
         <baseAirFlow>300.0</baseAirFlow>
         <flowType>Any</flowType>
         <ThermalWorkMultiplier>-1.00</ThermalWorkMultiplier>
-        <ConditionerMaxTemperatureDelta>60.0</ConditionerMaxTemperatureDelta>
+        <ProviderMaxTemperatureDelta>50.0</ProviderMaxTemperatureDelta>
       </li>
       <li Class="CompProperties_TempControl">
         <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
@@ -137,11 +137,11 @@
         <basePowerConsumption>400</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConditioner</compClass>
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
         <baseAirFlow>300.0</baseAirFlow>
         <flowType>Any</flowType>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
-        <ConditionerMaxTemperatureDelta>45.0</ConditionerMaxTemperatureDelta>
+        <ProviderMaxTemperatureDelta>35.0</ProviderMaxTemperatureDelta>
       </li>
       <li Class="CompProperties_TempControl">
         <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>

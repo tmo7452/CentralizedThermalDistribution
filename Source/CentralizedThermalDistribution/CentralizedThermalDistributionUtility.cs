@@ -24,33 +24,33 @@ namespace CentralizedThermalDistribution
         /// <summary>
         ///     Gizmo for Changing Pipes
         /// </summary>
-        /// <param name="compAirFlowConsumer">Component Asking for Gizmo</param>
+        /// <param name="compCoolant">Component Asking for Gizmo</param>
         /// <returns>Action Button Gizmo</returns>
-        public static Command_Action GetPipeSwitchToggle(CompCoolantConsumer compAirFlowConsumer)
+        public static Command_Action GetPipeSwitchToggle(CompCoolantSwitchable compCoolant)
         {
-            var currentPriority = compAirFlowConsumer.AirTypePriority;
+            var currentSelection = compCoolant.PipeColorSelection;
             Texture2D icon;
             string label;
 
-            switch (currentPriority)
+            switch (currentSelection)
             {
                 
-                case CoolantPipeColorPriority.Red:
+                case CoolantPipeColorSelection.Red:
                     label = SwitchPipeRedKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Red");
                     break;
 
-                case CoolantPipeColorPriority.Blue:
+                case CoolantPipeColorSelection.Blue:
                     label = SwitchPipeBlueKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Blue");
                     break;
 
-                case CoolantPipeColorPriority.Cyan:
+                case CoolantPipeColorSelection.Cyan:
                     label = SwitchPipeCyanKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Cyan");
                     break;
 
-                case CoolantPipeColorPriority.Auto:
+                case CoolantPipeColorSelection.Auto:
                 default:
                     label = SwitchPipeAutoKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Auto");
@@ -65,25 +65,23 @@ namespace CentralizedThermalDistribution
                 icon = icon,
                 action = delegate
                 {
-                    switch (currentPriority)
+                    switch (currentSelection)
                     {
-                        case CoolantPipeColorPriority.Auto:
-                            compAirFlowConsumer.SetPriority(CoolantPipeColorPriority.Red);
+                        case CoolantPipeColorSelection.Auto:
+                            compCoolant.SetSelection(CoolantPipeColorSelection.Red);
                             break;
 
-                        case CoolantPipeColorPriority.Red:
-                            compAirFlowConsumer.SetPriority(CoolantPipeColorPriority.Blue);
+                        case CoolantPipeColorSelection.Red:
+                            compCoolant.SetSelection(CoolantPipeColorSelection.Blue);
                             break;
 
-                        case CoolantPipeColorPriority.Blue:
-                            compAirFlowConsumer.SetPriority(CoolantPipeColorPriority.Cyan);
-                            break;
-                        case CoolantPipeColorPriority.Cyan:
-                            compAirFlowConsumer.SetPriority(CoolantPipeColorPriority.Auto);
+                        case CoolantPipeColorSelection.Blue:
+                            compCoolant.SetSelection(CoolantPipeColorSelection.Cyan);
                             break;
 
+                        case CoolantPipeColorSelection.Cyan:
                         default:
-                            compAirFlowConsumer.SetPriority(CoolantPipeColorPriority.Auto);
+                            compCoolant.SetSelection(CoolantPipeColorSelection.Auto);
                             break;
                     }
                 }

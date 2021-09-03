@@ -15,7 +15,7 @@ namespace CentralizedThermalDistribution
 
         public CoolantPipeColor pipeColor => Props.flowType;
 
-        public int GridID { get; set; } = -2;
+        public int NetID { get; set; } = -2;
 
         public CoolantNet coolantNet { get; set; }
 
@@ -27,7 +27,7 @@ namespace CentralizedThermalDistribution
         public virtual void ResetCoolantVariables()
         {
             coolantNet = null;
-            GridID = -1;
+            NetID = -1;
         }
 
         /// <summary>
@@ -80,8 +80,9 @@ namespace CentralizedThermalDistribution
                 output += GetAirTypeString(pipeColor);
             }
 
-            output += "\nNet Active: " + coolantNet.NetIsActive;
-            output += "\nNet Coolant Temp: " + coolantNet.NetCoolantTemperature;
+            output += "\nNet Active: " + coolantNet.IsNetActive();
+            if (coolantNet.IsNetActive())
+                output += "\nNet Coolant Temp: " + coolantNet.GetNetCoolantTemperature();
             
             //res += "\n";
             //res += TotalNetworkAirKey.Translate(coolantNet.CurrentIntakeAir);

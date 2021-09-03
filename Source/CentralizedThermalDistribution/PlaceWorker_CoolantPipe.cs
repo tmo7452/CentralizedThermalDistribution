@@ -23,10 +23,10 @@ namespace CentralizedThermalDistribution
         {
             //var thingList = loc.GetThingList(map);
             //return thingList.OfType<Building_AirFlowControl>().Any() ? AcceptanceReport.WasRejected : AcceptanceReport.WasAccepted;
-            if (loc.GetThingList(map).OfType<Building_CoolantFlowControl>().Any())
-            {
-                return AcceptanceReport.WasRejected;
-            }
+            //if (loc.GetThingList(map).OfType<Building_CoolantFlowControl>().Any())
+            //{
+            //    return AcceptanceReport.WasRejected;
+            //}
 
             var pipeBaseName = def.defName.Replace("Hidden", "");
             return loc.GetThingList(map).OfType<Building_CoolantPipe>().Any(pipe => pipe.def.defName.Contains(pipeBaseName))

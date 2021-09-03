@@ -10,8 +10,22 @@
         {
             string output = GetAirTypeString(Props.flowType);
             output += "\nConnected: " + IsConnected();
-            output += "\nGrid ID: " + GridID;
+            output += "\nNet ID: " + NetID;
+            var net = GetNet();
+            if (net != null)
+            {
+                output += "\nNet Coolant Temp: " + net.GetNetCoolantTemperature();
+            }
             return output;
+        }
+
+        /// <summary>
+        ///     Look up the coolant network for this pipe.
+        /// </summary>
+        /// <returns>CoolantNet its connected to</returns>
+        public CoolantNet GetNet()
+        {
+            return CentralizedThermalDistributionUtility.GetNetManager(parent.Map).GetNet(NetID);
         }
     }
 }

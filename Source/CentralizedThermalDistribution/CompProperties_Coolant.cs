@@ -13,7 +13,7 @@ namespace CentralizedThermalDistribution
         public float thermalCapacity;
         public bool transmitsAir;
 
-        public float ThermalWorkMultiplier;
-        public float ConditionerMaxTemperatureDelta;
+        public float ThermalWorkMultiplier = 1.00f;
+        public float ProviderMaxTemperatureDelta;
     }
 }

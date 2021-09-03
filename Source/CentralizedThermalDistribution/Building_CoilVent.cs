@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace CentralizedThermalDistribution
 {
     public class Building_CoilVent : Building
     {
-        public CompCoolantConsumer CompAirFlowConsumer;
+        public CompCoolantConsumer compCoolant;
+
+        private const float CoilVentMultiplier = 2.0f;
+
+        private float ThermalWorkMultiplier; // Heat output to both surroundings and and coolant is multiplied by this. 
+
+        public float ThermalWork = 0f;
 
         /// <summary>
         ///     Building spawned on the map
@@ -16,7 +21,8 @@ namespace CentralizedThermalDistribution
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            CompAirFlowConsumer = GetComp<CompCoolantConsumer>();
+            compCoolant = GetComp<CompCoolantConsumer>();
+            ThermalWorkMultiplier = compCoolant.Props.ThermalWorkMultiplier;
         }
 
         /// <summary>
@@ -24,84 +30,41 @@ namespace CentralizedThermalDistribution
         ///     Here, we generate the Gizmo for Chaning Pipe Priority
         /// </summary>
         /// <returns>List of Gizmos</returns>
-        public override IEnumerable<Gizmo> GetGizmos()
+        public override System.Collections.Generic.IEnumerable<Gizmo> GetGizmos()
         {
             foreach (var g in base.GetGizmos())
             {
                 yield return g;
             }
 
-            if (CompAirFlowConsumer != null)
+            if (compCoolant != null)
             {
-                yield return CentralizedThermalDistributionUtility.GetPipeSwitchToggle(CompAirFlowConsumer);
+                yield return CentralizedThermalDistributionUtility.GetPipeSwitchToggle(compCoolant);
             }
         }
 
+        public override string GetInspectString()
+        {
+            string output = base.GetInspectString();
+            output += "\nThermalWork: " + ThermalWork;
+            return output;
+        }
+        
         /// <summary>
-        ///     Tick function for Air Vents
-        ///     Main code for chaning temperature at the Rooms. We take the Converted Temperature from the Air Network.
+        ///     Tick function for Coil Vents
         /// </summary>
         public override void TickRare()
         {
-            CompAirFlowConsumer.TickRare();
+            ThermalWork = 0f;
+            if (!compCoolant.IsConnected()) return;
+            if (!compCoolant.coolantNet.IsNetActive()) return;
+            var outputTile = Position + IntVec3.North.RotatedBy(Rotation);
+            if (outputTile.Impassable(Map)) return;
 
-            if (!CompAirFlowConsumer.IsConnected())
-            {
-                return;
-            }
-
-            if (!CompAirFlowConsumer.IsActive())
-            {
-                return;
-            }
-
-            var intVec = Position + IntVec3.North.RotatedBy(Rotation);
-
-            if (intVec.Impassable(Map))
-            {
-                return;
-            }
-
-            //var insideTemp = intVec.GetTemperature(Map);
-            //var tempDiff = outsideTemp - insideTemp;
-            var outsideTemp = CompAirFlowConsumer.ConvertedTemperature;
-            var tempDiff = outsideTemp - intVec.GetTemperature(Map);
-            var magnitudeChange = Mathf.Abs(tempDiff);
-
-            // Cap change at 10.0f
-            if (magnitudeChange > 10.0f)
-            {
-                magnitudeChange = 10.0f;
-            }
-
-            float signChanger = 1;
-
-            if (tempDiff < 0)
-            {
-                signChanger = -1;
-            }
-
-            var i = 1;
-
-            if (CompAirFlowConsumer.ThermalEfficiency <= 0)
-            {
-                i = 0;
-            }
-
-            // Flow Efficiency is capped at 1.0f. Squaring will only keep it less than or equal to 1.0f. Smaller the number more drastic the square.
-            var efficiencyImpact =
-                CompAirFlowConsumer.FlowEfficiency * CompAirFlowConsumer.FlowEfficiency * i;
-
-            var smoothMagnitude = magnitudeChange * 0.25f * (CompAirFlowConsumer.Props.baseAirExhaust / 100.0f);
-            var energyLimit = smoothMagnitude * efficiencyImpact * 4.16666651f * 12f * signChanger;
-            var tempChange = GenTemperature.ControlTemperatureTempChange(intVec, Map, energyLimit, outsideTemp);
-
-            //var flag = !Mathf.Approximately(tempChange, 0f);
-            //if (flag)
-            if (!Mathf.Approximately(tempChange, 0f))
-            {
-                intVec.GetRoomOrAdjacent(Map).Temperature += tempChange;
-            }
+            // Linear, KISS
+            ThermalWork = (outputTile.GetTemperature(Map) - compCoolant.coolantNet.GetNetCoolantTemperature()) * CoilVentMultiplier * ThermalWorkMultiplier; // Positive if room is hotter than coolant
+            compCoolant.PushThermalLoad(ThermalWork); // Push coolant net (positive ThermalWork)
+            GenTemperature.PushHeat(outputTile, base.Map, -ThermalWork); // Push exhaust (negative ThermalWork)
         }
     }
 }
