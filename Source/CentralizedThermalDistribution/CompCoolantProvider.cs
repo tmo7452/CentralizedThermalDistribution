@@ -12,7 +12,7 @@ namespace CentralizedThermalDistribution
         public const string IntakeBlockedKey = "CentralizedThermalDistribution.Producer.IntakeBlocked";
 
         public bool ActiveOnNetwork = false; // Active on the coolant network.
-        public float CoolantThermalMass;
+        public int CoolantThermalMass;
         public float CoolantTemperature;
 
         /// <summary>

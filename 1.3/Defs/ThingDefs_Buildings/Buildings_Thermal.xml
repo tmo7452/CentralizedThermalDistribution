@@ -54,7 +54,7 @@
     <description>Decreases coolant temperature by heating the surrounding air.</description>
     <costList>
       <Steel>100</Steel>
-      <ComponentIndustrial>2</ComponentIndustrial>
+      <ComponentIndustrial>3</ComponentIndustrial>
     </costList>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
@@ -64,7 +64,7 @@
     <comps>
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>400</basePowerConsumption>
+        <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
@@ -81,7 +81,6 @@
     </comps>
     <designationCategory>Temperature</designationCategory>
     <designatorDropdown>CTD_Condenser</designatorDropdown>
-    <designationHotKey>Misc4</designationHotKey>
     <researchPrerequisites>
       <li>BasicThermalDistribution</li>
     </researchPrerequisites>
@@ -124,7 +123,7 @@
     <description>Increases coolant temperature by cooling the surrounding air.</description>
     <costList>
       <Steel>100</Steel>
-      <ComponentIndustrial>2</ComponentIndustrial>
+      <ComponentIndustrial>3</ComponentIndustrial>
     </costList>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
@@ -134,7 +133,7 @@
     <comps>
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>400</basePowerConsumption>
+        <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
@@ -151,13 +150,74 @@
     </comps>
     <designationCategory>Temperature</designationCategory>
     <designatorDropdown>CTD_Condenser</designatorDropdown>
-    <designationHotKey>Misc4</designationHotKey>
     <researchPrerequisites>
       <li>BasicThermalDistribution</li>
     </researchPrerequisites>
     <placeWorkers>
       <li>CentralizedThermalDistribution.PlaceWorker_IntakeFan</li>
     </placeWorkers>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
+    <defName>ResistiveHeater</defName>
+    <label>Resistive heater</label>
+    <thingClass>CentralizedThermalDistribution.Building_ResistiveHeater</thingClass>
+    <graphicData>
+      <texPath>Things/Building/ResistiveHeater</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <size>(1,1)</size>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <fillPercent>0.80</fillPercent>
+    <coversFloor>true</coversFloor>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>0.8</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>1600</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>20</Mass>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <description>Increases coolant temperature by consuming electricity.</description>
+    <costList>
+      <Steel>100</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
+        <flowType>Any</flowType>
+        <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
+      </li>
+      <li Class="CompProperties_TempControl">
+        <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <researchPrerequisites>
+      <li>BasicThermalDistribution</li>
+    </researchPrerequisites>
   </ThingDef>
   
   <!--

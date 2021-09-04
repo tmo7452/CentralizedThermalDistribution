@@ -4,7 +4,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class Building_AirSourceCondenser : Building_TempControl // Requires temp control!
+    public class Building_AirSourceCondenser : Building_TempControl
     {
         public enum Status
         {
@@ -15,7 +15,6 @@ namespace CentralizedThermalDistribution
             Working,
         }
 
-        //public CompPowerTrader compPowerTrader;
         public CompCoolantProvider compCoolant;
 
         private const float AirSourceCondenserMultiplier = 200.0f;
@@ -51,7 +50,7 @@ namespace CentralizedThermalDistribution
 
             compCoolant.CoolantTemperature = Position.GetTemperature(Map);
 
-            compCoolant.CoolantThermalMass = 100.0f; //TEMP
+            compCoolant.CoolantThermalMass = 100; //TEMP
         }
 
         /// <summary>
@@ -137,6 +136,7 @@ namespace CentralizedThermalDistribution
                     // === Condenser is online and idle ===
                     compTempControl.operatingAtHighPower = false;
                     compPowerTrader.PowerOutput = -compPowerTrader.Props.basePowerConsumption * compTempControl.Props.lowPowerConsumptionFactor;
+                    ThermalWork = 0;
 
                     // This determines the priority of status in case muiltiple idle cases are active:
                     // AirBlocked > EfficiencyLow > TemperatureReached
@@ -164,7 +164,7 @@ namespace CentralizedThermalDistribution
                 compCoolant.ActiveOnNetwork = false;
                 //compTempControl.operatingAtHighPower = false; // Vanilla coolers and heaters simply leave these values as-is.
                 //compPowerTrader.PowerOutput = 0;
-
+                ThermalWork = 0;
             }
         }
     }

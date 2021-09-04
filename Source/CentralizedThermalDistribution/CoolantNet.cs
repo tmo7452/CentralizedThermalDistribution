@@ -77,9 +77,10 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
-        ///     Process one Tick of the Air Flow Network. Here we process the Producers, Consumers and Climate Controllers.
-        ///     We Calculate the Flow Efficiency (FE) and Thermal Efficiency (TE).
-        ///     FE & TEs are recorded for each individual network.
+        ///     Process one tick of the coolant network.
+        ///     Collect info about active providers.
+        ///     Collect pending thermal load from all consumers.
+        ///     Equalize all providers coolant temps, and also distribute the thermal load.
         /// </summary>
         public void CoolantNetTick()
         {
@@ -109,14 +110,14 @@ namespace CentralizedThermalDistribution
                 consumer.PendingThermalLoad = 0;
             }
 
-            float splitThermalLoad = thermalLoadSum / ActiveProviders;
+            float loadPerUnitMass = thermalLoadSum / massSum;
 
             foreach (var provider in Providers)
             {
                 if (!provider.IsConnected() || !provider.IsActive()) continue;
 
                 provider.CoolantTemperature = CoolantTemperature;
-                provider.PushThermalLoad(splitThermalLoad);
+                provider.PushThermalLoad(loadPerUnitMass * provider.CoolantThermalMass);
             }
         }
 
