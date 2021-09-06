@@ -5,6 +5,13 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
+    public enum CoolantPipeColorSelection
+    {
+        Red = 0,
+        Blue = 1,
+        Cyan = 2,
+        Auto = 3
+    }
     public class CompCoolantSwitchable : CompCoolant
     {
 

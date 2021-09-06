@@ -87,5 +87,77 @@ namespace CentralizedThermalDistribution
                 }
             };
         }
+
+        /// <summary>
+        ///     Gizmo for changing condenser minimum efficiency setting.
+        /// </summary>
+        /// <param name="compCoolant">Component Asking for Gizmo</param>
+        /// <returns>Action Button Gizmo</returns>
+        public static Command_Action GetMinEfficiencyToggle(Building_AirSourceCondenser compCondenser)
+        {
+            var currentSelection = compCondenser.minEfficiencySelection;
+            Texture2D icon;
+            string label;
+
+            switch (currentSelection)
+            {
+
+                case Building_AirSourceCondenser.MinEfficiencySelection.E10:
+                    //label = SwitchPipeRedKey.Translate();
+                    label = "Efficiency Cutoff: 10%";
+                    icon = ContentFinder<Texture2D>.Get("UI/MinEfficiencySelect_E10");
+                    break;
+
+                case Building_AirSourceCondenser.MinEfficiencySelection.E25:
+                default:
+                    //label = SwitchPipeBlueKey.Translate();
+                    label = "Efficiency Cutoff: 25%";
+                    icon = ContentFinder<Texture2D>.Get("UI/MinEfficiencySelect_E25");
+                    break;
+
+                case Building_AirSourceCondenser.MinEfficiencySelection.E50:
+                    //label = SwitchPipeCyanKey.Translate();
+                    label = "Efficiency Cutoff: 50%";
+                    icon = ContentFinder<Texture2D>.Get("UI/MinEfficiencySelect_E50");
+                    break;
+
+                case Building_AirSourceCondenser.MinEfficiencySelection.E80:
+                    //label = SwitchPipeAutoKey.Translate();
+                    label = "Efficiency Cutoff: 80%";
+                    icon = ContentFinder<Texture2D>.Get("UI/MinEfficiencySelect_E80");
+                    break;
+            }
+
+            return new Command_Action
+            {
+                defaultLabel = label,
+                defaultDesc = "CentralizedThermalDistribution.Command.SwitchPipe.Desc".Translate(),
+                //hotKey = KeyBindingDefOf.Misc4,
+                icon = icon,
+                action = delegate
+                {
+                    switch (currentSelection)
+                    {
+                        case Building_AirSourceCondenser.MinEfficiencySelection.E10:
+                            compCondenser.minEfficiencySelection = Building_AirSourceCondenser.MinEfficiencySelection.E25;
+                            break;
+
+                        case Building_AirSourceCondenser.MinEfficiencySelection.E25:
+                        default:
+                            compCondenser.minEfficiencySelection = Building_AirSourceCondenser.MinEfficiencySelection.E50;
+                            break;
+
+                        case Building_AirSourceCondenser.MinEfficiencySelection.E50:
+                            compCondenser.minEfficiencySelection = Building_AirSourceCondenser.MinEfficiencySelection.E80;
+                            break;
+
+                        case Building_AirSourceCondenser.MinEfficiencySelection.E80:
+                            compCondenser.minEfficiencySelection = Building_AirSourceCondenser.MinEfficiencySelection.E10;
+                            break;
+                    }
+                }
+            };
+        }
+
     }
 }

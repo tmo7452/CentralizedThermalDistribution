@@ -14,14 +14,21 @@ namespace CentralizedThermalDistribution
             TemperatureReached,
             Working,
         }
+        public enum MinEfficiencySelection
+        {
+            E10 = 10,
+            E25 = 25,
+            E50 = 50,
+            E80 = 80,
+        }
 
         public CompCoolantProvider compCoolant;
 
         private const float AirSourceCondenserMultiplier = 200.0f;
         private const float WasteHeatMultiplier = 0.15f; // This percentage of work done is additionally output as waste heat, regardless of operation mode.
-        private const float MinEfficiencyCutoff = 0.25f; // If operational efficiency drops below this percent, unit will go idle. (Eventually to be set in-game)
         private float MaxTemperatureDelta; // Positive degrees Celcius. Efficiency decreases, up to this limit, as the coolant is heated/chilled beyond ambient temp.
         private float ThermalWorkMultiplier; // Positive if heating coolant, negative if cooling. Heat output to both surroundings and and coolant is multiplied by this. 
+        public MinEfficiencySelection minEfficiencySelection = MinEfficiencySelection.E25; // If operational efficiency drops below this percent, unit will go idle.
 
         public Status status = Status.Offline;
         public bool IsAirBlocked = false;
@@ -54,20 +61,31 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
+        ///     Method called during Game Save/Load
+        /// </summary>
+        public override void ExposeData()
+        {
+            base.ExposeData();
+
+            Scribe_Values.Look(ref minEfficiencySelection, "minEfficiencySelection", MinEfficiencySelection.E25);
+        }
+
+        /// <summary>
         ///     Get the Gizmos for AirVent
         ///     Here, we generate the Gizmo for Chaning Pipe Priority
         /// </summary>
         /// <returns>List of Gizmos</returns>
         public override System.Collections.Generic.IEnumerable<Gizmo> GetGizmos()
         {
-            foreach (var g in base.GetGizmos())
+            foreach (var gizmo in base.GetGizmos())
             {
-                yield return g;
+                yield return gizmo;
             }
 
             if (compCoolant != null)
             {
                 yield return CentralizedThermalDistributionUtility.GetPipeSwitchToggle(compCoolant);
+                yield return CentralizedThermalDistributionUtility.GetMinEfficiencyToggle(this); 
             }
         }
 
@@ -127,7 +145,7 @@ namespace CentralizedThermalDistribution
                     ThermalEfficiency = 0f;
                 }
                 TotalEfficiency = AirFlowEfficiency * ThermalEfficiency;
-                IsEfficiencyLow = (TotalEfficiency < MinEfficiencyCutoff); // True if total efficiency is below the efficiency limit
+                IsEfficiencyLow = ((TotalEfficiency * 100) < (int)minEfficiencySelection); // True if total efficiency is below the efficiency limit
 
                 compCoolant.ActiveOnNetwork = !IsAirBlocked; // Of the three idle cases, AirBlocked is the only one that should cause it to deactivate from the coolant network.
 

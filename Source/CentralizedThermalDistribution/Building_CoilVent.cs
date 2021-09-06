@@ -32,9 +32,9 @@ namespace CentralizedThermalDistribution
         /// <returns>List of Gizmos</returns>
         public override System.Collections.Generic.IEnumerable<Gizmo> GetGizmos()
         {
-            foreach (var g in base.GetGizmos())
+            foreach (var gizmo in base.GetGizmos())
             {
-                yield return g;
+                yield return gizmo;
             }
 
             if (compCoolant != null)

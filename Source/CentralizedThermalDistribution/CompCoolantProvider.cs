@@ -37,37 +37,6 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
-        ///     Extra Component Inspection string
-        /// </summary>
-        /// <returns>String Containing information for Producers</returns>
-        public override string CompInspectStringExtra()
-        {
-            
-            var str = "";
-            /*
-            if (IsPoweredOff || IsBrokenDown)
-            {
-                return null;
-            }
-
-            if (IsBlocked)
-            {
-                str += IntakeBlockedKey.Translate();
-                return str;
-            }
-
-            if (!IsConnected())
-            {
-                return str + base.CompInspectStringExtra();
-            }
-
-            str += IntakeTempKey.Translate(IntakeTemperature.ToStringTemperature("F0")) + "\n";
-            */
-            return str + base.CompInspectStringExtra();
-            
-        }
-
-        /// <summary>
         ///     Check if Temperature Control is active or not. Needs Consumers and shouldn't be Blocked
         /// </summary>
         /// <returns>Boolean Active State</returns>
