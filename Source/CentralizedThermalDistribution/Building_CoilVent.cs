@@ -7,7 +7,7 @@ namespace CentralizedThermalDistribution
     {
         public CompCoolantConsumer compCoolant;
 
-        private const float CoilVentMultiplier = 2.0f;
+        private const float CoilVentMultiplier = 0.4f;
 
         private float ThermalWorkMultiplier; // Heat output to both surroundings and and coolant is multiplied by this. 
 
@@ -49,11 +49,12 @@ namespace CentralizedThermalDistribution
             output += "\nThermalWork: " + ThermalWork;
             return output;
         }
-        
+
         /// <summary>
-        ///     Tick function for Coil Vents
+        ///     Update function for Coil Vents
         /// </summary>
-        public override void TickRare()
+        /// <param name="tickMultiplier">Number of 50 tick increments to process.</param>
+        private void Update(int tickMultiplier)
         {
             ThermalWork = 0f;
             if (!compCoolant.IsConnected()) return;
@@ -62,9 +63,26 @@ namespace CentralizedThermalDistribution
             if (outputTile.Impassable(Map)) return;
 
             // Linear, KISS
-            ThermalWork = (outputTile.GetTemperature(Map) - compCoolant.coolantNet.GetNetCoolantTemperature()) * CoilVentMultiplier * ThermalWorkMultiplier; // Positive if room is hotter than coolant
+            ThermalWork = (outputTile.GetTemperature(Map) - compCoolant.coolantNet.GetNetCoolantTemperature()) * CoilVentMultiplier * ThermalWorkMultiplier * tickMultiplier; // Positive if room is hotter than coolant
             compCoolant.PushThermalLoad(ThermalWork); // Push coolant net (positive ThermalWork)
             GenTemperature.PushHeat(outputTile, base.Map, -ThermalWork); // Push exhaust (negative ThermalWork)
+        }
+
+        /// <summary>
+        ///     Normal tick coil vent.
+        /// </summary>
+        public override void Tick()
+        {
+            if (this.IsHashIntervalTick(50))
+                Update(1);
+        }
+
+        /// <summary>
+        ///     Rare tick coil vent.
+        /// </summary>
+        public override void TickRare()
+        {
+            Update(5);
         }
     }
 }

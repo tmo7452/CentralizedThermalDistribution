@@ -5,16 +5,13 @@
   <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseThermalBuilding" ParentName="BuildingBase">
     <category>Building</category>
     <thingClass>Building</thingClass>
-    <!-- <minifiedDef>MinifiedThing</minifiedDef> -->
     <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
     <selectable>true</selectable>
     <drawerType>MapMeshAndRealTime</drawerType>
-    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
     <repairEffect>Repair</repairEffect>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
-    <!-- <thingCategories>
-      <li>BuildingsClimate</li>
-    </thingCategories> -->
+    <tickerType>Normal</tickerType>
     <statBases>
       <Beauty>-10</Beauty>
     </statBases>
@@ -23,6 +20,7 @@
     <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
     <defName>AirSourceCondenserSmall</defName>
     <label>Small condenser</label>
+    <description>Decreases coolant temperature by heating the surrounding air.</description>
     <thingClass>CentralizedThermalDistribution.Building_AirSourceCondenser</thingClass>
     <graphicData>
       <texPath>Things/Building/CondenserSmall</texPath>
@@ -36,7 +34,8 @@
     </graphicData>
     <size>(1,1)</size>
     <altitudeLayer>Building</altitudeLayer>
-    <passability>Impassable</passability>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
     <blockWind>true</blockWind>
     <fillPercent>0.80</fillPercent>
     <coversFloor>true</coversFloor>
@@ -50,13 +49,10 @@
       <Mass>20</Mass>
       <Flammability>1.0</Flammability>
     </statBases>
-    <tickerType>Rare</tickerType>
-    <description>Decreases coolant temperature by heating the surrounding air.</description>
     <costList>
       <Steel>100</Steel>
       <ComponentIndustrial>3</ComponentIndustrial>
     </costList>
-    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <building>
       <canPlaceOverWall>true</canPlaceOverWall>
@@ -74,13 +70,14 @@
         <ProviderMaxTemperatureDelta>50.0</ProviderMaxTemperatureDelta>
       </li>
       <li Class="CompProperties_TempControl">
+        <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
         <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
       </li>
       <li Class="CompProperties_Flickable" />
       <li Class="CompProperties_Breakdownable" />
     </comps>
     <designationCategory>Temperature</designationCategory>
-    <designatorDropdown>CTD_Condenser</designatorDropdown>
+    <designatorDropdown>CTD_Condensers</designatorDropdown>
     <researchPrerequisites>
       <li>BasicThermalDistribution</li>
     </researchPrerequisites>
@@ -92,6 +89,7 @@
   <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
     <defName>AirSourceHeatPumpSmall</defName>
     <label>Small heat pump</label>
+    <description>Increases coolant temperature by cooling the surrounding air.</description>
     <thingClass>CentralizedThermalDistribution.Building_AirSourceCondenser</thingClass>
     <graphicData>
       <texPath>Things/Building/HeatPumpSmall</texPath>
@@ -105,7 +103,8 @@
     </graphicData>
     <size>(1,1)</size>
     <altitudeLayer>Building</altitudeLayer>
-    <passability>Impassable</passability>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
     <blockWind>true</blockWind>
     <fillPercent>0.80</fillPercent>
     <coversFloor>true</coversFloor>
@@ -119,13 +118,10 @@
       <Mass>20</Mass>
       <Flammability>1.0</Flammability>
     </statBases>
-    <tickerType>Rare</tickerType>
-    <description>Increases coolant temperature by cooling the surrounding air.</description>
     <costList>
       <Steel>100</Steel>
       <ComponentIndustrial>3</ComponentIndustrial>
     </costList>
-    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <building>
       <canPlaceOverWall>true</canPlaceOverWall>
@@ -143,13 +139,14 @@
         <ProviderMaxTemperatureDelta>35.0</ProviderMaxTemperatureDelta>
       </li>
       <li Class="CompProperties_TempControl">
+        <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
         <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
       </li>
       <li Class="CompProperties_Flickable" />
       <li Class="CompProperties_Breakdownable" />
     </comps>
     <designationCategory>Temperature</designationCategory>
-    <designatorDropdown>CTD_Condenser</designatorDropdown>
+    <designatorDropdown>CTD_Condensers</designatorDropdown>
     <researchPrerequisites>
       <li>BasicThermalDistribution</li>
     </researchPrerequisites>
@@ -159,11 +156,12 @@
   </ThingDef>
   
   <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
-    <defName>ResistiveHeater</defName>
-    <label>Resistive heater</label>
-    <thingClass>CentralizedThermalDistribution.Building_ResistiveHeater</thingClass>
+    <defName>ElectricFurnace</defName>
+    <label>Electric furnace</label>
+    <description>Increases coolant temperature by consuming electricity.</description>
+    <thingClass>CentralizedThermalDistribution.Building_ElectricFurnace</thingClass>
     <graphicData>
-      <texPath>Things/Building/ResistiveHeater</texPath>
+      <texPath>Things/Building/ElectricFurnace</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <damageData>
         <cornerTL>Damage/Corner</cornerTL>
@@ -174,7 +172,8 @@
     </graphicData>
     <size>(1,1)</size>
     <altitudeLayer>Building</altitudeLayer>
-    <passability>Impassable</passability>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
     <blockWind>true</blockWind>
     <fillPercent>0.80</fillPercent>
     <coversFloor>true</coversFloor>
@@ -188,13 +187,10 @@
       <Mass>20</Mass>
       <Flammability>1.0</Flammability>
     </statBases>
-    <tickerType>Rare</tickerType>
-    <description>Increases coolant temperature by consuming electricity.</description>
     <costList>
       <Steel>100</Steel>
       <ComponentIndustrial>1</ComponentIndustrial>
     </costList>
-    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <building>
       <canPlaceOverWall>true</canPlaceOverWall>
@@ -209,15 +205,98 @@
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_TempControl">
+        <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
         <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
       </li>
       <li Class="CompProperties_Flickable" />
       <li Class="CompProperties_Breakdownable" />
     </comps>
     <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CTD_Furnaces</designatorDropdown>
     <researchPrerequisites>
       <li>BasicThermalDistribution</li>
     </researchPrerequisites>
+  </ThingDef>
+  
+  <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
+    <defName>WoodFiredFurnace</defName>
+    <label>wood-fired furnace</label>
+    <description>Increases coolant temperature by consuming wood. Must be periodically loaded with wood fuel by hand.</description>
+    <thingClass>CentralizedThermalDistribution.Building_FueledFurnace</thingClass>
+    <graphicData>
+      <texPath>Things/Building/WoodFiredFurnace</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+      <shadowData>
+        <volume>(1.93,1,1.69)</volume>
+        <offset>(-0.03,0,-0.1)</offset>
+      </shadowData>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
+    <blockWind>true</blockWind>
+    <fillPercent>1.0</fillPercent>
+    <castEdgeShadows>false</castEdgeShadows>
+    <rotatable>false</rotatable>
+    <statBases>
+      <MaxHitPoints>300</MaxHitPoints>
+      <WorkToBuild>2500</WorkToBuild>
+      <Flammability>1.0</Flammability>
+      <Beauty>-20</Beauty>
+    </statBases>
+    <canOverlapZones>false</canOverlapZones>
+    <size>(2,2)</size>
+    <building>
+      <destroySound>BuildingDestroyed_Metal_Medium</destroySound>
+    </building>
+    <costList>
+      <Steel>100</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>20</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_TempControl">
+        <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
+        <lowPowerConsumptionFactor>1.0</lowPowerConsumptionFactor>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
+        <flowType>Any</flowType>
+        <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Refuelable">
+        <fuelConsumptionRate>22.0</fuelConsumptionRate>
+        <fuelCapacity>75.0</fuelCapacity>
+        <consumeFuelOnlyWhenUsed>true</consumeFuelOnlyWhenUsed>
+        <fuelFilter>
+          <thingDefs>
+            <li>WoodLog</li>
+          </thingDefs>
+        </fuelFilter>
+        <showAllowAutoRefuelToggle>true</showAllowAutoRefuelToggle>
+      </li>
+      <li Class="CompProperties_Glower">
+        <glowRadius>6</glowRadius>
+        <glowColor>(217,112,33,0)</glowColor>
+      </li>
+      <li Class="CompProperties_HeatPusher">
+        <compClass>CompHeatPusherPowered</compClass>
+        <heatPerSecond>2</heatPerSecond>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <designationCategory>Temperature</designationCategory>
+    <designatorDropdown>CTD_Furnaces</designatorDropdown>
+    <constructEffect>ConstructMetal</constructEffect>
+    <researchPrerequisites>
+      <li>BasicThermalDistribution</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>4</constructionSkillPrerequisite>
   </ThingDef>
   
   <!--

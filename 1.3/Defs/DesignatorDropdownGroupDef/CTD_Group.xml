@@ -4,10 +4,10 @@
     <defName>CTD_CoolantPipes</defName>
   </DesignatorDropdownGroupDef>
   <DesignatorDropdownGroupDef>
-    <defName>CTD_Condenser</defName>
+    <defName>CTD_Condensers</defName>
   </DesignatorDropdownGroupDef>
   <DesignatorDropdownGroupDef>
-    <defName>CTD_HeatPump</defName>
+    <defName>CTD_Furnaces</defName>
   </DesignatorDropdownGroupDef>
   <DesignatorDropdownGroupDef>
     <defName>CTD_CoilVents</defName>

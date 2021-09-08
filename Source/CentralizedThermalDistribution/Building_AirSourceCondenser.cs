@@ -4,41 +4,26 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class Building_AirSourceCondenser : Building_TempControl
+    public class Building_AirSourceCondenser : Building_CoolantProvider
     {
-        public enum Status
-        {
-            Offline,
-            AirBlocked,
-            EfficiencyLow,
-            TemperatureReached,
-            Working,
-        }
         public enum MinEfficiencySelection
         {
-            E10 = 10,
-            E25 = 25,
-            E50 = 50,
-            E80 = 80,
+            E10 = 10, // 10%
+            E25 = 25, // 25%
+            E50 = 50, // 50%
+            E80 = 80, // 80%
         }
 
-        public CompCoolantProvider compCoolant;
-
-        private const float AirSourceCondenserMultiplier = 200.0f;
+        private const float AirSourceCondenserMultiplier = 40.0f; // Multipler unique to this provider type
         private const float WasteHeatMultiplier = 0.15f; // This percentage of work done is additionally output as waste heat, regardless of operation mode.
         private float MaxTemperatureDelta; // Positive degrees Celcius. Efficiency decreases, up to this limit, as the coolant is heated/chilled beyond ambient temp.
-        private float ThermalWorkMultiplier; // Positive if heating coolant, negative if cooling. Heat output to both surroundings and and coolant is multiplied by this. 
         public MinEfficiencySelection minEfficiencySelection = MinEfficiencySelection.E25; // If operational efficiency drops below this percent, unit will go idle.
 
-        public Status status = Status.Offline;
         public bool IsAirBlocked = false;
         public bool IsEfficiencyLow = false;
-        public bool IsTemperatureReached = false;
-
         public float AirFlowEfficiency = 0f;
         public float ThermalEfficiency = 0f;
         public float TotalEfficiency = 0f;
-        public float ThermalWork = 0f;
 
         /// <summary>
         ///     Building spawned on the map
@@ -48,16 +33,8 @@ namespace CentralizedThermalDistribution
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            compPowerTrader = GetComp<CompPowerTrader>();
-            compCoolant = GetComp<CompCoolantProvider>();
-            compCoolant.Props.flowType = CoolantPipeColor.Any;
-
-            ThermalWorkMultiplier = compCoolant.Props.ThermalWorkMultiplier;
-            MaxTemperatureDelta = compCoolant.Props.ProviderMaxTemperatureDelta * 2; // See comments for "Thermal efficiency check"
-
-            compCoolant.CoolantTemperature = Position.GetTemperature(Map);
-
-            compCoolant.CoolantThermalMass = 100; //TEMP
+            MaxTemperatureDelta = compCoolant.Props.ProviderMaxTemperatureDelta * 2; // For why *2, see comments for "Thermal efficiency check"
+            AddGizmo(CentralizedThermalDistributionUtility.GetMinEfficiencyToggle(this));
         }
 
         /// <summary>
@@ -70,120 +47,68 @@ namespace CentralizedThermalDistribution
             Scribe_Values.Look(ref minEfficiencySelection, "minEfficiencySelection", MinEfficiencySelection.E25);
         }
 
-        /// <summary>
-        ///     Get the Gizmos for AirVent
-        ///     Here, we generate the Gizmo for Chaning Pipe Priority
-        /// </summary>
-        /// <returns>List of Gizmos</returns>
-        public override System.Collections.Generic.IEnumerable<Gizmo> GetGizmos()
-        {
-            foreach (var gizmo in base.GetGizmos())
-            {
-                yield return gizmo;
-            }
-
-            if (compCoolant != null)
-            {
-                yield return CentralizedThermalDistributionUtility.GetPipeSwitchToggle(compCoolant);
-                yield return CentralizedThermalDistributionUtility.GetMinEfficiencyToggle(this); 
-            }
-        }
-
         public override string GetInspectString()
         {
-            string output = base.GetInspectString();
-            output += "\nThermalWork: " + ThermalWork;
-            output += "\nStatus: " + (IsAirBlocked ? "Air_Blocked, " : "Air_OK, ") + (IsEfficiencyLow ? "Efficiency_Low, " : "Efficiency_OK, ") + (IsTemperatureReached ? "Temp_Reached" : "Temp_OK");
-            output += "\nAirFlowEfficiency: " + (int)(AirFlowEfficiency * 100) + "%";
-            output += "\nTotalEfficiency: " + TotalEfficiency;
-            return output;
+            System.Text.StringBuilder output = new();
+            output.AppendLine(base.GetInspectString());
+            output.AppendLine("DEBUG AirFlowEfficiency: " + (int)(AirFlowEfficiency * 100) + "%");
+            output.AppendLine("DEBUG TotalEfficiency: " + TotalEfficiency);
+            return output.ToString().Trim();
         }
 
-        /// <summary>
-        ///     Tick condenser unit. Check the surrondings for blockage. Calculate total efficiency and resulting output.
-        /// </summary>
-        public override void TickRare()
+        public override void CheckStatus()
         {
-            if (compPowerTrader.PowerOn)
+            base.CheckStatus(); //Temperature reached check
+
+            // === Air blockage check ===
+            // Count number of blocked adjacent cells
+            var adjList = GenAdj.CellsAdjacentCardinal(Position, Rotation, def.Size).ToList();
+            int unblockedAdjacent = 0;
+            foreach (var intVec in adjList)
             {
-                int SignOfMode = System.Math.Sign(ThermalWorkMultiplier); // Positive if heating coolant, negative if cooling.
-
-                // === Temperature setting check ===
-                IsTemperatureReached = ((SignOfMode*compCoolant.CoolantTemperature) >= (SignOfMode*compTempControl.targetTemperature)); // True if coolant temp is at or beyond desired temp.
-
-                // === Blockage check ===
-                // Count number of blocked adjacent cells
-                var adjList = GenAdj.CellsAdjacentCardinal(Position, Rotation, def.Size).ToList();
-                int unblockedAdjacent = 0;
-                foreach (var intVec in adjList)
+                if (intVec.Impassable(Map))
                 {
-                    if (intVec.Impassable(Map))
-                    {
-                        continue;
-                    }
-                    unblockedAdjacent++;
+                    continue;
                 }
-                // Air flow efficiency is ratio of adjacent open cells
-                AirFlowEfficiency = (float)unblockedAdjacent / adjList.Count;
-                IsAirBlocked = (AirFlowEfficiency == 0);  // True if all adjacent cells are blocked
+                unblockedAdjacent++;
+            }
+            // Air flow efficiency is ratio of adjacent open cells
+            AirFlowEfficiency = (float)unblockedAdjacent / adjList.Count;
+            IsAirBlocked = (AirFlowEfficiency == 0);  // True if all adjacent cells are blocked
 
-                // === Thermal efficiency check ===
-                // Temperature differential efficincy is parabolic
-                // 0% efficiency when coolant temp is at or beyond MaxTemperatureDifference from ambient temp
-                // 100% efficiency when coolant temp matches ambient temp
-                // Bonus efficiency if ambient temp is closer to desired temp than coolant is (for example, 400% if delta is MaxTemperatureDifference in the opposite direction)
-                // The parabolic efficiency curve is deceptively agressive. We double the value of MaxTemperatureDifference (under SpawnSetup), so in-game the result is accurate with efficiency cutoff at 25%.
-                // https://www.desmos.com/calculator/5uosg4hpca
-                var tempDelta = SignOfMode * (Position.GetTemperature(Map) - compCoolant.CoolantTemperature);
-                if (tempDelta > -MaxTemperatureDelta)
-                {
-                    // ThermalEfficiency = (tempDelta + MaxTemperatureDifference)^2 / MaxTemperatureDifference^2
-                    ThermalEfficiency = ((tempDelta + MaxTemperatureDelta) * (tempDelta + MaxTemperatureDelta)) / (MaxTemperatureDelta * MaxTemperatureDelta); // Optimized
-                }
-                else
-                {
-                    ThermalEfficiency = 0f;
-                }
-                TotalEfficiency = AirFlowEfficiency * ThermalEfficiency;
-                IsEfficiencyLow = ((TotalEfficiency * 100) < (int)minEfficiencySelection); // True if total efficiency is below the efficiency limit
-
-                compCoolant.ActiveOnNetwork = !IsAirBlocked; // Of the three idle cases, AirBlocked is the only one that should cause it to deactivate from the coolant network.
-
-                if (IsAirBlocked || IsEfficiencyLow || IsTemperatureReached)
-                {
-                    // === Condenser is online and idle ===
-                    compTempControl.operatingAtHighPower = false;
-                    compPowerTrader.PowerOutput = -compPowerTrader.Props.basePowerConsumption * compTempControl.Props.lowPowerConsumptionFactor;
-                    ThermalWork = 0;
-
-                    // This determines the priority of status in case muiltiple idle cases are active:
-                    // AirBlocked > EfficiencyLow > TemperatureReached
-                    // This code could be optimized to be branchless.
-                    if (IsAirBlocked) { status = Status.AirBlocked; }
-                    else if (IsEfficiencyLow) { status = Status.EfficiencyLow; }
-                    else { status = Status.TemperatureReached; }
-                }
-                else
-                {
-                    // === Condenser is online and working ===
-                    status = Status.Working;
-                    compTempControl.operatingAtHighPower = true;
-                    compPowerTrader.PowerOutput = -compPowerTrader.Props.basePowerConsumption; // Power consumption ignores current operating efficiency.
-                    ThermalWork = TotalEfficiency * AirSourceCondenserMultiplier * ThermalWorkMultiplier;
-
-                    compCoolant.PushThermalLoad(ThermalWork); // Push to coolant
-                    GenTemperature.PushHeat(Position, base.Map, (System.Math.Abs(ThermalWork) * WasteHeatMultiplier) - ThermalWork); // Push exhaust (negative ThermalWork)
-                }
+            // === Thermal efficiency check ===
+            // Temperature differential efficincy is parabolic
+            // 0% efficiency when coolant temp is at or beyond MaxTemperatureDifference from ambient temp
+            // 100% efficiency when coolant temp matches ambient temp
+            // Bonus efficiency if ambient temp is closer to desired temp than coolant is (for example, 400% if delta is MaxTemperatureDifference in the opposite direction)
+            // The parabolic efficiency curve is deceptively agressive. We double the value of MaxTemperatureDifference (under SpawnSetup), so in-game the result is accurate with efficiency cutoff at 25%.
+            // https://www.desmos.com/calculator/5uosg4hpca
+            var tempDelta = System.Math.Sign(ThermalWorkMultiplier) * (Position.GetTemperature(Map) - compCoolant.CoolantTemperature);
+            if (tempDelta > -MaxTemperatureDelta)
+            {
+                // ThermalEfficiency = (tempDelta + MaxTemperatureDifference)^2 / MaxTemperatureDifference^2
+                ThermalEfficiency = ((tempDelta + MaxTemperatureDelta) * (tempDelta + MaxTemperatureDelta)) / (MaxTemperatureDelta * MaxTemperatureDelta); // Optimized
             }
             else
             {
-                // === Condenser is offline ===
-                status = Status.Offline;
-                compCoolant.ActiveOnNetwork = false;
-                //compTempControl.operatingAtHighPower = false; // Vanilla coolers and heaters simply leave these values as-is.
-                //compPowerTrader.PowerOutput = 0;
-                ThermalWork = 0;
+                ThermalEfficiency = 0f;
             }
+            TotalEfficiency = AirFlowEfficiency * ThermalEfficiency;
+            IsEfficiencyLow = (TotalEfficiency * 100) < (int)minEfficiencySelection; // True if total efficiency is below the efficiency limit
+
+            // This determines the priority of status in case muiltiple idle cases are active:
+            // AirBlocked > EfficiencyLow > TemperatureReached
+            if (IsAirBlocked) { SetStatus(Status.Offline, "AirBlocked"); }
+            else if (IsEfficiencyLow) { SetStatus(Status.Idle, "EfficiencyLow"); }
+            else if (IsTemperatureReached) { SetStatus(Status.Idle, "TemperatureReached"); }
+            else { SetStatus(Status.Working); }
+        }
+
+        public override void DoThermalWork(int tickMultiplier)
+        {
+            ThermalWork = TotalEfficiency * AirSourceCondenserMultiplier * ThermalWorkMultiplier * tickMultiplier;
+            compCoolant.PushThermalLoad(ThermalWork); // Push to coolant
+            GenTemperature.PushHeat(Position, base.Map, (System.Math.Abs(ThermalWork) * WasteHeatMultiplier) - ThermalWork); // Push exhaust (negative ThermalWork)
         }
     }
 }

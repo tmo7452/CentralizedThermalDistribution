@@ -26,7 +26,7 @@
     <designationHotKey>Misc4</designationHotKey>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
-    <tickerType>Rare</tickerType>
+    <tickerType>Normal</tickerType>
   </ThingDef>
   
   <!-- Parent Wall Mounted Coil Vent Building -->

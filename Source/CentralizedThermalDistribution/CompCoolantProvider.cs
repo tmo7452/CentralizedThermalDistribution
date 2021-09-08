@@ -22,6 +22,8 @@ namespace CentralizedThermalDistribution
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterProvider(this);
+            CoolantThermalMass = Props.ProviderCoolantThermalMass;
+            CoolantTemperature = parent.Position.GetTemperature(parent.Map);
             base.PostSpawnSetup(respawningAfterLoad);
         }
 

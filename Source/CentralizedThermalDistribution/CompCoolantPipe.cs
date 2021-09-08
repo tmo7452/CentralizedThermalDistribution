@@ -2,6 +2,7 @@
 {
     public class CompCoolantPipe : CompCoolant
     {
+        /*
         /// <summary>
         ///     Component Inspection for Pipes
         /// </summary>
@@ -18,7 +19,7 @@
             }
             return output;
         }
-
+        */
         /// <summary>
         ///     Look up the coolant network for this pipe.
         /// </summary>

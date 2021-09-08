@@ -72,18 +72,20 @@ namespace CentralizedThermalDistribution
                 return NotConnectedKey.Translate();
             }
 
-            string output = ConnectedKey.Translate();
+            string output; // = ConnectedKey.Translate();
 
-            if (pipeColor != CoolantPipeColor.Any)
-            {
-                output += "\n";
-                output += GetAirTypeString(pipeColor);
-            }
+            //if (pipeColor != CoolantPipeColor.Any)
+            //{
+            //    output += "\n";
+            //    output += GetAirTypeString(pipeColor);
+            //}
 
-            output += "\nNet Active: " + coolantNet.IsNetActive();
             if (coolantNet.IsNetActive())
-                output += "\nNet Coolant Temp: " + coolantNet.GetNetCoolantTemperature();
-            
+                output = pipeColor + " net coolant temp: " + coolantNet.GetNetCoolantTemperature();
+            else
+                output = pipeColor + " net inactive";
+
+
             //res += "\n";
             //res += TotalNetworkAirKey.Translate(coolantNet.CurrentIntakeAir);
 
