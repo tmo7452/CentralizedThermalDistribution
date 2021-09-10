@@ -7,32 +7,32 @@ namespace CentralizedThermalDistribution
     {
         // Actual Atlas
         public static Graphic BlankPipeAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeBlank_Atlas", ShaderDatabase.Transparent);
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeBlank_Atlas", ShaderDatabase.Transparent);
 
         public static Graphic HotPipeAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeRed_Atlas", ShaderDatabase.Transparent);
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeRed_Atlas", ShaderDatabase.Transparent);
 
         public static Graphic ColdPipeAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeBlue_Atlas", ShaderDatabase.Transparent);
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeBlue_Atlas", ShaderDatabase.Transparent);
 
         public static Graphic FrozenPipeAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeCyan_Atlas", ShaderDatabase.Transparent);
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeCyan_Atlas", ShaderDatabase.Transparent);
 
         // Overlays
         public static Graphic HotPipeOverlayAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeRed_Overlay_Atlas",
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeRed_Overlay_Atlas",
                 ShaderDatabase.MetaOverlay);
 
         public static Graphic ColdPipeOverlayAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeBlue_Overlay_Atlas",
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeBlue_Overlay_Atlas",
                 ShaderDatabase.MetaOverlay);
 
         public static Graphic FrozenPipeOverlayAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeCyan_Overlay_Atlas",
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeCyan_Overlay_Atlas",
                 ShaderDatabase.MetaOverlay);
 
         public static Graphic AnyPipeOverlayAtlas =
-            GraphicDatabase.Get<Graphic_Single>("Things/Building/CoolantPipeAny_Overlay_Atlas",
+            GraphicDatabase.Get<Graphic_Single>("Things/Building/Pipes/CoolantPipeAny_Overlay_Atlas",
                 ShaderDatabase.MetaOverlay);
 
         public static GraphicPipe GraphicHotPipe = new GraphicPipe(HotPipeAtlas, CoolantPipeColor.Red);

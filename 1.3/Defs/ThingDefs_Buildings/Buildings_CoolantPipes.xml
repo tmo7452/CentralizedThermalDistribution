@@ -58,7 +58,7 @@
       <Steel>1</Steel>
     </costList>
     <graphicData>
-      <texPath>Things/Building/CoolantPipeRed_Atlas</texPath>
+      <texPath>Things/Building/Pipes/CoolantPipeRed_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>Basic</linkType>
       <linkFlags>
@@ -70,7 +70,7 @@
     </graphicData>
     <building>
       <blueprintGraphicData>
-        <texPath>Things/Building/CoolantPipeRed_Blueprint_Atlas</texPath>
+        <texPath>Things/Building/Pipes/CoolantPipeRed_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
     </building>
     <designationCategory>Temperature</designationCategory>
@@ -92,7 +92,7 @@
       <Steel>5</Steel>
     </costList>
     <graphicData>
-      <texPath>Things/Building/CoolantPipeBlank_Atlas</texPath>
+      <texPath>Things/Building/Pipes/CoolantPipeBlank_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>Basic</linkType>
       <linkFlags>
@@ -104,7 +104,7 @@
     </graphicData>
     <building>
       <blueprintGraphicData>
-        <texPath>Things/Building/CoolantPipeRed_Blueprint_Atlas</texPath>
+        <texPath>Things/Building/Pipes/CoolantPipeRed_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
     </building>
     <designationCategory>Temperature</designationCategory>
@@ -127,7 +127,7 @@
       <Steel>1</Steel>
     </costList>
     <graphicData>
-      <texPath>Things/Building/CoolantPipeBlue_Atlas</texPath>
+      <texPath>Things/Building/Pipes/CoolantPipeBlue_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>Basic</linkType>
       <linkFlags>
@@ -139,7 +139,7 @@
     </graphicData>
     <building>
       <blueprintGraphicData>
-        <texPath>Things/Building/CoolantPipeBlue_Blueprint_Atlas</texPath>
+        <texPath>Things/Building/Pipes/CoolantPipeBlue_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
     </building>
     <designationCategory>Temperature</designationCategory>
@@ -161,7 +161,7 @@
       <Steel>5</Steel>
     </costList>
     <graphicData>
-      <texPath>Things/Building/CoolantPipeBlank_Atlas</texPath>
+      <texPath>Things/Building/Pipes/CoolantPipeBlank_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>Basic</linkType>
       <linkFlags>
@@ -173,7 +173,7 @@
     </graphicData>
     <building>
       <blueprintGraphicData>
-        <texPath>Things/Building/CoolantPipeBlue_Blueprint_Atlas</texPath>
+        <texPath>Things/Building/Pipes/CoolantPipeBlue_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
     </building>
     <designationCategory>Temperature</designationCategory>
@@ -196,7 +196,7 @@
       <Steel>1</Steel>
     </costList>
     <graphicData>
-      <texPath>Things/Building/CoolantPipeCyan_Atlas</texPath>
+      <texPath>Things/Building/Pipes/CoolantPipeCyan_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>Basic</linkType>
       <linkFlags>
@@ -208,7 +208,7 @@
     </graphicData>
     <building>
       <blueprintGraphicData>
-        <texPath>Things/Building/CoolantPipeCyan_Blueprint_Atlas</texPath>
+        <texPath>Things/Building/Pipes/CoolantPipeCyan_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
     </building>
     <designationCategory>Temperature</designationCategory>
@@ -230,7 +230,7 @@
       <Steel>5</Steel>
     </costList>
     <graphicData>
-      <texPath>Things/Building/CoolantPipeBlank_Atlas</texPath>
+      <texPath>Things/Building/Pipes/CoolantPipeBlank_Atlas</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <linkType>Basic</linkType>
       <linkFlags>
@@ -242,7 +242,7 @@
     </graphicData>
     <building>
       <blueprintGraphicData>
-        <texPath>Things/Building/CoolantPipeCyan_Blueprint_Atlas</texPath>
+        <texPath>Things/Building/Pipes/CoolantPipeCyan_Blueprint_Atlas</texPath>
       </blueprintGraphicData>
     </building>
     <designationCategory>Temperature</designationCategory>
