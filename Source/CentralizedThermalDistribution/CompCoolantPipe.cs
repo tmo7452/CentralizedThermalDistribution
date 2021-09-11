@@ -1,7 +1,45 @@
-﻿namespace CentralizedThermalDistribution
+﻿//using RimWorld;
+using Verse;
+
+namespace CentralizedThermalDistribution
 {
     public class CompCoolantPipe : CompCoolant
     {
+        /// <summary>
+        ///     Component spawned on the map
+        /// </summary>
+        /// <param name="respawningAfterLoad">Unused flag</param>
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            SetPipeColor(BasePipeColor); // Pipes spawn with a preset color
+            base.PostSpawnSetup(respawningAfterLoad);
+        }
+
+        /// <summary>
+        ///     Building de-spawned from the map
+        /// </summary>
+        /// <param name="map">RimWorld Map</param>
+        public override void PostDeSpawn(Map map)
+        {
+            // SetPipeColor(PipeColor.None); // Can't use this because it assumes parent.map is valid.
+            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterPipe(this);
+            base.SetPipeColor(PipeColor.None);
+            base.PostDeSpawn(map);
+        }
+
+        public override void SetPipeColor(PipeColor newColor)
+        {
+            if (CurrentPipeColor != PipeColor.None)
+            {
+                CentralizedThermalDistributionUtility.GetNetManager(parent.Map).DeregisterPipe(this);
+            }
+            base.SetPipeColor(newColor);
+            if (CurrentPipeColor != PipeColor.None)
+            {
+                CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterPipe(this);
+            }
+        }
+
         /*
         /// <summary>
         ///     Component Inspection for Pipes

@@ -65,7 +65,7 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
         <baseAirFlow>300.0</baseAirFlow>
-        <flowType>Any</flowType>
+        <flowType>Trader</flowType>
         <ThermalWorkMultiplier>-1.00</ThermalWorkMultiplier>
         <ProviderMaxTemperatureDelta>50.0</ProviderMaxTemperatureDelta>
       </li>
@@ -134,7 +134,7 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
         <baseAirFlow>300.0</baseAirFlow>
-        <flowType>Any</flowType>
+        <flowType>Trader</flowType>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
         <ProviderMaxTemperatureDelta>35.0</ProviderMaxTemperatureDelta>
       </li>
@@ -201,7 +201,7 @@
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
-        <flowType>Any</flowType>
+        <flowType>Trader</flowType>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_TempControl">
@@ -265,7 +265,7 @@
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
-        <flowType>Any</flowType>
+        <flowType>Trader</flowType>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable" />

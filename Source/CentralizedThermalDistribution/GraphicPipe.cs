@@ -7,7 +7,7 @@ namespace CentralizedThermalDistribution
 {
     public class GraphicPipe : Graphic_Linked
     {
-        public CoolantPipeColor FlowType;
+        public CompCoolant.PipeColor FlowType;
 
         public GraphicPipe()
         {
@@ -18,7 +18,7 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="graphic">Multi Graphic Object</param>
         /// <param name="flowType">Type of Pipe</param>
-        public GraphicPipe(Graphic graphic, CoolantPipeColor flowType)
+        public GraphicPipe(Graphic graphic, CompCoolant.PipeColor flowType)
         {
             subGraphic = graphic;
             FlowType = flowType;
@@ -31,7 +31,7 @@ namespace CentralizedThermalDistribution
         public GraphicPipe(Graphic graphic)
         {
             subGraphic = graphic;
-            FlowType = CoolantPipeColor.Red;
+            FlowType = CompCoolant.PipeColor.Red;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace CentralizedThermalDistribution
         public override bool ShouldLinkWith(IntVec3 vec, Thing parent)
         {
             return vec.InBounds(parent.Map) &&
-                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).ZoneAt(vec, FlowType);
+                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(vec, FlowType);
         }
 
 
@@ -76,7 +76,7 @@ namespace CentralizedThermalDistribution
                 var intVec = parent.Position + GenAdj.CardinalDirections[i];
 
                 if (!intVec.InBounds(parent.Map) ||
-                    !CentralizedThermalDistributionUtility.GetNetManager(parent.Map).ZoneAt(intVec, FlowType) ||
+                    !CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(intVec, FlowType) ||
                     intVec.GetTerrain(parent.Map).layerable)
                 {
                     continue;

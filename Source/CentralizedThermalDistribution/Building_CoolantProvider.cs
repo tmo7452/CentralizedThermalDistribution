@@ -21,7 +21,7 @@ namespace CentralizedThermalDistribution
 
         public Status status { get; private set; } = Status.Offline;
         public string statusString { get; private set; } = statusStrings[0];
-        private System.Collections.Generic.List<Gizmo> Gizmos = new();
+        private System.Collections.Generic.List<System.Func<Gizmo>> Gizmos = new(); // A list of lambda functions to be called during gizmo checks.
         public bool IsTemperatureReached { get; protected set; } = false;
         public float ThermalWork { get; protected set; } = 0f;
         public float ThermalWorkMultiplier; // Multiplier unique to the building type, set by the Def. Positive if heating coolant, negative if cooling.
@@ -47,10 +47,10 @@ namespace CentralizedThermalDistribution
             compCoolant = GetComp<CompCoolantProvider>();
 
             compTempControl.targetTempString = "CentralizedThermalDistribution.Provider.TargetCoolantTemperature";
-            compCoolant.Props.flowType = CoolantPipeColor.Any;
+            compCoolant.Props.flowType = CompCoolant.PipeColor.Trader;
 
             ThermalWorkMultiplier = compCoolant.Props.ThermalWorkMultiplier;
-            AddGizmo(CentralizedThermalDistributionUtility.GetPipeSwitchToggle(compCoolant));
+            AddGizmo(() => CentralizedThermalDistributionUtility.GetPipeSwitchToggle(compCoolant));
         }
 
         public override string GetInspectString()
@@ -62,7 +62,7 @@ namespace CentralizedThermalDistribution
             return output.ToString().Trim();
         }
 
-        public void AddGizmo(Gizmo gizmo)
+        public void AddGizmo(System.Func<Gizmo> gizmo)
         {
             Gizmos.Add(gizmo);
         }
@@ -73,7 +73,7 @@ namespace CentralizedThermalDistribution
                 yield return gizmo;
 
             foreach (var gizmo in Gizmos)
-                yield return gizmo;
+                yield return gizmo();
         }
 
         public virtual void CheckStatus()

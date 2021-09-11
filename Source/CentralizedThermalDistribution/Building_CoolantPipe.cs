@@ -5,7 +5,7 @@ namespace CentralizedThermalDistribution
     public class Building_CoolantPipe : Building
     {
         public CompCoolantPipe CompAirFlowPipe;
-        public CoolantPipeColor FlowType;
+        public CompCoolant.PipeColor FlowType;
 
         /// <summary>
         ///     Building spawned on the map

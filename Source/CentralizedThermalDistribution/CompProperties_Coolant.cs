@@ -8,7 +8,7 @@ namespace CentralizedThermalDistribution
 
         public float baseAirFlow;
 
-        public CoolantPipeColor flowType;
+        public CompCoolant.PipeColor flowType;
 
         public float thermalCapacity;
         public bool transmitsAir;

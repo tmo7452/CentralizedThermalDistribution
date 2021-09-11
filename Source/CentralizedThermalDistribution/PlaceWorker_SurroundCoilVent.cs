@@ -22,7 +22,7 @@ namespace CentralizedThermalDistribution
                 return;
             }
 
-            var type = CoolantPipeColor.Red;
+            var type = CompCoolant.PipeColor.Red;
 
             var map = Find.CurrentMap;
 
@@ -39,7 +39,7 @@ namespace CentralizedThermalDistribution
 
                 if (airVent.compCoolant.coolantNet != null)
                 {
-                    type = airVent.compCoolant.coolantNet.PipeColor;
+                    type = airVent.compCoolant.coolantNet.pipeColor;
                 }
 
                 break;
@@ -50,7 +50,7 @@ namespace CentralizedThermalDistribution
             //var surroundCells = GenAdj.CellsAdjacent8Way(center, rot, size).ToList();
             var surroundCells = GenAdj.CellsAdjacent8Way(center, rot, def.Size).ToList();
 
-            var typeColor = type == CoolantPipeColor.Red ? Color.red : type == CoolantPipeColor.Blue ? Color.blue : Color.cyan;
+            var typeColor = type == CompCoolant.PipeColor.Red ? Color.red : type == CompCoolant.PipeColor.Blue ? Color.blue : Color.cyan;
 
             GenDraw.DrawFieldEdges(surroundCells, typeColor);
 

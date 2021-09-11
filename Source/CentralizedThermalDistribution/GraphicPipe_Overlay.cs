@@ -8,7 +8,7 @@ namespace CentralizedThermalDistribution
     {
         private readonly Graphic _anyGraphic;
         private readonly Graphic _flowGraphic;
-        public CoolantPipeColor FlowType;
+        public CompCoolant.PipeColor FlowType;
 
         public GraphicPipe_Overlay()
         {
@@ -21,7 +21,7 @@ namespace CentralizedThermalDistribution
         /// <param name="anyGraphic">Any Pipe Overlay Graphic</param>
         public GraphicPipe_Overlay(Graphic subGraphic, Graphic anyGraphic) : base(subGraphic)
         {
-            FlowType = CoolantPipeColor.Red;
+            FlowType = CompCoolant.PipeColor.Red;
             _anyGraphic = anyGraphic;
             _flowGraphic = subGraphic;
         }
@@ -32,7 +32,7 @@ namespace CentralizedThermalDistribution
         /// <param name="subGraphic">Color Specific Overlay</param>
         /// <param name="anyGraphic">Any Pipe Overlay Graphic</param>
         /// <param name="type">Flow Type of the Atlas</param>
-        public GraphicPipe_Overlay(Graphic subGraphic, Graphic anyGraphic, CoolantPipeColor type) : base(subGraphic)
+        public GraphicPipe_Overlay(Graphic subGraphic, Graphic anyGraphic, CompCoolant.PipeColor type) : base(subGraphic)
         {
             FlowType = type;
             _anyGraphic = anyGraphic;
@@ -57,7 +57,7 @@ namespace CentralizedThermalDistribution
             }
 
             return intVec.InBounds(parent.Map) &&
-                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).ZoneAt(intVec, FlowType);
+                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(intVec, FlowType);
         }
 
         /// <summary>
@@ -82,12 +82,12 @@ namespace CentralizedThermalDistribution
                     return;
                 }
 
-                if (compAirFlow.pipeColor != FlowType && compAirFlow.pipeColor != CoolantPipeColor.Any)
+                if (compAirFlow.CurrentPipeColor != FlowType && compAirFlow.CurrentPipeColor != CompCoolant.PipeColor.Trader)
                 {
                     return;
                 }
 
-                subGraphic = compAirFlow.pipeColor == CoolantPipeColor.Any ? _anyGraphic : _flowGraphic;
+                subGraphic = compAirFlow.CurrentPipeColor == CompCoolant.PipeColor.Trader ? _anyGraphic : _flowGraphic;
 
                 Printer_Plane.PrintPlane(layer, vector, Vector2.one, LinkedDrawMatFrom(parent, item));
             }

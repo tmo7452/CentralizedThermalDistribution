@@ -6,82 +6,38 @@ namespace CentralizedThermalDistribution
 {
     public class CoolantNet
     {
-        public int NetID { get; set; } = -2;
-        public CoolantPipeColor PipeColor;
+        public uint NetID { get; set; } = 0;
+        public CompCoolant.PipeColor pipeColor;
 
         private int ActiveProviders = 0;
         private float CoolantTemperature = 0f;
 
-        public List<CompCoolant> Connectors = new();
+        public List<CompCoolantPipe> Pipes = new();
+        public List<CompCoolantTrader> Traders = new();
         public List<CompCoolantProvider> Providers = new();
         public List<CompCoolantConsumer> Consumers = new();
 
-        /// <summary>
-        ///     Register a coolant provider in the Network.
-        /// </summary>
-        /// <param name="provider">The Provider's Component</param>
-        public void RegisterProvider(CompCoolantProvider provider)
+        public CoolantNet(uint newNetID, CompCoolant.PipeColor newPipeColor)
         {
-            if (Providers.Contains(provider))
-            {
-                Log.Error("AirFlowNet registered provider it already had: " + provider);
-                return;
-            }
-
-            Providers.Add(provider);
+            NetID = newNetID;
+            pipeColor = newPipeColor;
         }
 
-        /// <summary>
-        ///     De-register a coolant provider in the Network.
-        /// </summary>
-        /// <param name="provider">The Provider's Component</param>
-        public void DeregisterProvider(CompCoolantProvider provider)
+        public void DestroyNet()
         {
-            if (!Providers.Contains(provider))
-            {
-                Log.Error("AirFlowNet de-registered provider it already removed: " + provider);
-                return;
-            }
+            foreach (var pipe in Pipes)
+                pipe.SetNet(null);
+            Pipes = new();
 
-            Providers.Remove(provider);
+            foreach (var trader in Traders)
+                trader.RemoveNet(this);
+            Traders = new();
+
+            Providers = new();
+            Consumers = new();
+            ActiveProviders = 0;
         }
 
-        /// <summary>
-        ///     Register a coolant consumer in the Network.
-        /// </summary>
-        /// <param name="consumer">The Consumer's Component</param>
-        public void RegisterConsumer(CompCoolantConsumer consumer)
-        {
-            if (Consumers.Contains(consumer))
-            {
-                Log.Error("CoolantNet registered consumer it already had: " + consumer);
-                return;
-            }
-
-            Consumers.Add(consumer);
-        }
-
-        /// <summary>
-        ///     De-register a coolant consumer in the Network.
-        /// </summary>
-        /// <param name="consumer">The Consumer's Component</param>
-        public void DeregisterProvider(CompCoolantConsumer consumer)
-        {
-            if (!Consumers.Contains(consumer))
-            {
-                Log.Error("CoolantNet de-registered consumer it already removed: " + consumer);
-                return;
-            }
-
-            Consumers.Remove(consumer);
-        }
-
-        /// <summary>
-        ///     Process one tick of the coolant network.
-        ///     Collect info about active providers.
-        ///     Collect pending thermal load from all consumers.
-        ///     Equalize all providers coolant temps, and also distribute the thermal load.
-        /// </summary>
         public void CoolantNetTick()
         {
             ActiveProviders = 0;
@@ -139,34 +95,6 @@ namespace CentralizedThermalDistribution
             if (IsNetActive()) return CoolantTemperature;
             Log.Error("GetNetCoolantTemperature called while net is inactive.");
             return 666f;
-        }
-
-        /// <summary>
-        ///     Print the Debug String for this Network
-        /// </summary>
-        /// <returns>Multi-line String containing Output</returns>
-        public string DebugString()
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("------------");
-            stringBuilder.AppendLine("AIRFLOW NET:");
-            stringBuilder.AppendLine("  Active Providers: " + ActiveProviders);
-            stringBuilder.AppendLine("  Coolant Temperature: " + CoolantTemperature);
-
-            stringBuilder.AppendLine("  Producers: ");
-            foreach (var current in Providers)
-            {
-                stringBuilder.AppendLine("      " + current.parent);
-            }
-
-            stringBuilder.AppendLine("  Consumers: ");
-            foreach (var current in Consumers)
-            {
-                stringBuilder.AppendLine("      " + current.parent);
-            }
-
-            stringBuilder.AppendLine("------------");
-            return stringBuilder.ToString();
         }
     }
 }

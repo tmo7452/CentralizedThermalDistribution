@@ -6,7 +6,7 @@ namespace CentralizedThermalDistribution
 {
     internal class SectionLayer_CoolantPipeCyan : SectionLayer_Things
     {
-        public CoolantPipeColor FlowType;
+        public CompCoolant.PipeColor FlowType;
 
         /// <summary>
         ///     Cyan Pipe Overlay Section Layer
@@ -14,7 +14,7 @@ namespace CentralizedThermalDistribution
         /// <param name="section">Section of the Map</param>
         public SectionLayer_CoolantPipeCyan(Section section) : base(section)
         {
-            FlowType = CoolantPipeColor.Cyan;
+            FlowType = CompCoolant.PipeColor.Cyan;
             requireAddToMapMesh = false;
             relevantChangeTypes = (MapMeshFlag)4;
         }
@@ -48,7 +48,7 @@ namespace CentralizedThermalDistribution
             }
 
             var compAirFlow = building.GetComps<CompCoolant>()
-                .FirstOrDefault(x => x.pipeColor == FlowType || x.pipeColor == CoolantPipeColor.Any);
+                .FirstOrDefault(x => x.CurrentPipeColor == FlowType || x.CurrentPipeColor == CompCoolant.PipeColor.Trader);
             compAirFlow?.PrintForGrid(this, FlowType);
         }
     }

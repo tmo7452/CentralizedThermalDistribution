@@ -26,31 +26,31 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="compCoolant">Component Asking for Gizmo</param>
         /// <returns>Action Button Gizmo</returns>
-        public static Command_Action GetPipeSwitchToggle(CompCoolantSwitchable compCoolant)
+        public static Command_Action GetPipeSwitchToggle(CompCoolantTrader compCoolant)
         {
-            var currentSelection = compCoolant.PipeColorSelection;
+            var currentSelection = compCoolant.pipeColorSelection;
             Texture2D icon;
             string label;
 
             switch (currentSelection)
             {
                 
-                case CoolantPipeColorSelection.Red:
+                case CompCoolantTrader.PipeColorSelection.Red:
                     label = SwitchPipeRedKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Red");
                     break;
 
-                case CoolantPipeColorSelection.Blue:
+                case CompCoolantTrader.PipeColorSelection.Blue:
                     label = SwitchPipeBlueKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Blue");
                     break;
 
-                case CoolantPipeColorSelection.Cyan:
+                case CompCoolantTrader.PipeColorSelection.Cyan:
                     label = SwitchPipeCyanKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Cyan");
                     break;
 
-                case CoolantPipeColorSelection.Auto:
+                case CompCoolantTrader.PipeColorSelection.Auto:
                 default:
                     label = SwitchPipeAutoKey.Translate();
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Auto");
@@ -67,21 +67,21 @@ namespace CentralizedThermalDistribution
                 {
                     switch (currentSelection)
                     {
-                        case CoolantPipeColorSelection.Auto:
-                            compCoolant.SetSelection(CoolantPipeColorSelection.Red);
+                        case CompCoolantTrader.PipeColorSelection.Auto:
+                            compCoolant.SetSelection(CompCoolantTrader.PipeColorSelection.Red);
                             break;
 
-                        case CoolantPipeColorSelection.Red:
-                            compCoolant.SetSelection(CoolantPipeColorSelection.Blue);
+                        case CompCoolantTrader.PipeColorSelection.Red:
+                            compCoolant.SetSelection(CompCoolantTrader.PipeColorSelection.Blue);
                             break;
 
-                        case CoolantPipeColorSelection.Blue:
-                            compCoolant.SetSelection(CoolantPipeColorSelection.Cyan);
+                        case CompCoolantTrader.PipeColorSelection.Blue:
+                            compCoolant.SetSelection(CompCoolantTrader.PipeColorSelection.Cyan);
                             break;
 
-                        case CoolantPipeColorSelection.Cyan:
+                        case CompCoolantTrader.PipeColorSelection.Cyan:
                         default:
-                            compCoolant.SetSelection(CoolantPipeColorSelection.Auto);
+                            compCoolant.SetSelection(CompCoolantTrader.PipeColorSelection.Auto);
                             break;
                     }
                 }

@@ -5,7 +5,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantConsumer : CompCoolantSwitchable
+    public class CompCoolantConsumer : CompCoolantTrader
     {
         public const string AirFlowOutputKey = "CentralizedThermalDistribution.AirFlowOutput";
         public const string IntakeTempKey = "CentralizedThermalDistribution.Consumer.ConvertedTemperature";
@@ -22,9 +22,8 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused Flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterConsumer(this);
-
             base.PostSpawnSetup(respawningAfterLoad);
+            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterConsumer(this);
         }
 
         /// <summary>
@@ -34,8 +33,16 @@ namespace CentralizedThermalDistribution
         public override void PostDeSpawn(Map map)
         {
             CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterConsumer(this);
-            ResetCoolantVariables();
             base.PostDeSpawn(map);
+        }
+
+        public override void SetNet(CoolantNet newNet)
+        {
+            if (coolantNet != null)
+                coolantNet.Consumers.Remove(this);
+            base.SetNet(newNet);
+            if (coolantNet != null)
+                coolantNet.Consumers.Add(this);
         }
 
         /// <summary>
@@ -62,7 +69,7 @@ namespace CentralizedThermalDistribution
         ///     Positive load to heat, negative load to cool.
         /// </summary>
         /// <param name="ThermalLoad">Float amount of thermal load to apply</param>
-        public void PushThermalLoad(float ThermalLoad)
+        public override void PushThermalLoad(float ThermalLoad)
         {
             PendingThermalLoad += ThermalLoad;
         }

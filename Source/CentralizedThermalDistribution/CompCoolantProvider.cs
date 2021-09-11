@@ -5,7 +5,7 @@ using Verse;
 namespace CentralizedThermalDistribution
 {
     // Provides coolant flow and influences its temperature. At least one provider must be present on a network.
-    public class CompCoolantProvider : CompCoolantSwitchable
+    public class CompCoolantProvider : CompCoolantTrader
     {
         public const string AirFlowOutputKey = "CentralizedThermalDistribution.AirFlowOutput";
         public const string IntakeTempKey = "CentralizedThermalDistribution.Producer.IntakeTemperature";
@@ -21,10 +21,10 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused Flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
+            base.PostSpawnSetup(respawningAfterLoad);
             CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterProvider(this);
             CoolantThermalMass = Props.ProviderCoolantThermalMass;
             CoolantTemperature = parent.Position.GetTemperature(parent.Map);
-            base.PostSpawnSetup(respawningAfterLoad);
         }
 
         /// <summary>
@@ -34,8 +34,16 @@ namespace CentralizedThermalDistribution
         public override void PostDeSpawn(Map map)
         {
             CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterProvider(this);
-            ResetCoolantVariables();
             base.PostDeSpawn(map);
+        }
+
+        public override void SetNet(CoolantNet newNet)
+        {
+            if (coolantNet != null)
+                coolantNet.Providers.Remove(this);
+            base.SetNet(newNet);
+            if (coolantNet != null)
+                coolantNet.Providers.Add(this);
         }
 
         /// <summary>
@@ -52,7 +60,7 @@ namespace CentralizedThermalDistribution
         ///     Positive load to heat, negative load to cool.
         /// </summary>
         /// <param name="ThermalLoad">Float amount Thermal Load to apply</param>
-        public void PushThermalLoad(float ThermalLoad)
+        public override void PushThermalLoad(float ThermalLoad)
         {
             CoolantTemperature += ThermalLoad / CoolantThermalMass;
         }

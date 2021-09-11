@@ -34,7 +34,7 @@ namespace CentralizedThermalDistribution
         {
             base.SpawnSetup(map, respawningAfterLoad);
             MaxTemperatureDelta = compCoolant.Props.ProviderMaxTemperatureDelta * 2; // For why *2, see comments for "Thermal efficiency check"
-            AddGizmo(CentralizedThermalDistributionUtility.GetMinEfficiencyToggle(this));
+            AddGizmo(() => CentralizedThermalDistributionUtility.GetMinEfficiencyToggle(this));
         }
 
         /// <summary>

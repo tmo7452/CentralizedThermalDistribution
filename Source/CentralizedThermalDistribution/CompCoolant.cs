@@ -5,6 +5,25 @@ namespace CentralizedThermalDistribution
     // Member of a coolant network
     public class CompCoolant : ThingComp
     {
+        public enum PipeColor
+        {
+            Trader = -1,
+            None = 0,
+            Red = 1,
+            Blue = 2,
+            Cyan = 3,
+            Green = 4,
+        }
+        public const int PipeColorCount = 4;
+        public static int PipeColorToIndex(PipeColor color)
+        {
+            return (int)color - 1;
+        }
+        public static PipeColor PipeColorFromIndex(int index)
+        {
+            return (PipeColor)(index + 1);
+        }
+
         public const string NotConnectedKey = "CentralizedThermalDistribution.AirFlowNetDisconnected";
         public const string ConnectedKey = "CentralizedThermalDistribution.AirFlowNetConnected";
         public const string AirTypeKey = "CentralizedThermalDistribution.AirType";
@@ -13,31 +32,19 @@ namespace CentralizedThermalDistribution
         public const string FrozenAirKey = "CentralizedThermalDistribution.FrozenAir";
         public const string TotalNetworkAirKey = "CentralizedThermalDistribution.TotalNetworkAir";
 
-        public CoolantPipeColor pipeColor => Props.flowType;
+        public PipeColor BasePipeColor => Props.flowType;
+        public PipeColor CurrentPipeColor { get; private set; } = PipeColor.None;
 
-        public int NetID { get; set; } = -2;
+        public uint NetID { get; private set; } = 0;
 
-        public CoolantNet coolantNet { get; set; }
+        public CoolantNet coolantNet { get; private set; }
 
         public CompProperties_Coolant Props => (CompProperties_Coolant)props;
 
-        /// <summary>
-        ///     Reset the AirFlow Variables
-        /// </summary>
-        public virtual void ResetCoolantVariables()
+        public virtual void SetNet(CoolantNet newNet)
         {
-            coolantNet = null;
-            NetID = -1;
-        }
-
-        /// <summary>
-        ///     Component spawned on the map
-        /// </summary>
-        /// <param name="respawningAfterLoad">Unused flag</param>
-        public override void PostSpawnSetup(bool respawningAfterLoad)
-        {
-            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterPipe(this);
-            base.PostSpawnSetup(respawningAfterLoad);
+            coolantNet = newNet;
+            NetID = newNet == null ? 0 : newNet.NetID;
         }
 
         /// <summary>
@@ -46,10 +53,13 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterPipe(this);
-            ResetCoolantVariables();
-
+            SetNet(null);
             base.PostDeSpawn(map);
+        }
+
+        public virtual void SetPipeColor(PipeColor newColor)
+        {
+            CurrentPipeColor = newColor;
         }
 
         /// <summary>
@@ -81,9 +91,9 @@ namespace CentralizedThermalDistribution
             //}
 
             if (coolantNet.IsNetActive())
-                output = pipeColor + " net coolant temp: " + coolantNet.GetNetCoolantTemperature();
+                output = CurrentPipeColor + " net coolant temp: " + coolantNet.GetNetCoolantTemperature();
             else
-                output = pipeColor + " net inactive";
+                output = CurrentPipeColor + " net inactive";
 
 
             //res += "\n";
@@ -97,23 +107,23 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="layer">Section Layer that is being Printed</param>
         /// <param name="type">AirFlow Type</param>
-        public void PrintForGrid(SectionLayer layer, CoolantPipeColor type)
+        public void PrintForGrid(SectionLayer layer, PipeColor type)
         {
             switch (type)
             {
-                case CoolantPipeColor.Red:
+                case PipeColor.Red:
                     GraphicsLoader.GraphicHotPipeOverlay.Print(layer, parent, 0);
                     break;
 
-                case CoolantPipeColor.Blue:
+                case PipeColor.Blue:
                     GraphicsLoader.GraphicColdPipeOverlay.Print(layer, parent, 0);
                     break;
 
-                case CoolantPipeColor.Cyan:
+                case PipeColor.Cyan:
                     GraphicsLoader.GraphicFrozenPipeOverlay.Print(layer, parent, 0);
                     break;
 
-                case CoolantPipeColor.Any:
+                default:
                     break;
             }
         }
@@ -123,20 +133,20 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="type">Enum for AirFlow Type</param>
         /// <returns>Translated String</returns>
-        protected string GetAirTypeString(CoolantPipeColor type)
+        protected string GetPipeColorString(PipeColor type)
         {
             var res = "";
             switch (type)
             {
-                case CoolantPipeColor.Blue:
+                case PipeColor.Blue:
                     res += AirTypeKey.Translate(ColdAirKey.Translate());
                     break;
 
-                case CoolantPipeColor.Red:
+                case PipeColor.Red:
                     res += AirTypeKey.Translate(HotAirKey.Translate());
                     break;
 
-                case CoolantPipeColor.Cyan:
+                case PipeColor.Cyan:
                     res += AirTypeKey.Translate(FrozenAirKey.Translate());
                     break;
 
