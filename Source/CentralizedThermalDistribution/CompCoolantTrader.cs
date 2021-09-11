@@ -5,7 +5,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantTrader : CompCoolant
+    public abstract class CompCoolantTrader : CompCoolant
     {
 
         public enum PipeColorSelection
@@ -31,10 +31,31 @@ namespace CentralizedThermalDistribution
 
         public PipeColorSelection pipeColorSelection = PipeColorSelection.Auto;
         private System.Collections.Generic.List<CoolantNet> AvailableNets = new();
+        private System.Collections.Generic.List<System.Func<Gizmo>> Gizmos = new(); // A list of lambda functions to be called during gizmo checks.
+
+        public float ThermalWork { get; protected set; } = 0f;
+        protected float ThermalWorkMultiplier; // Multiplier unique to the building type, set by the Def. Positive if heating coolant, negative if cooling.
+
+        public void AddGizmo(System.Func<Gizmo> gizmo)
+        {
+            Gizmos.Add(gizmo);
+        }
+
+        public override System.Collections.Generic.IEnumerable<Gizmo> CompGetGizmosExtra()
+        {
+            foreach (var gizmo in base.CompGetGizmosExtra())
+                yield return gizmo;
+
+            foreach (var gizmo in Gizmos)
+                yield return gizmo();
+        }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
+            Props.pipeColor = PipeColor.Trader;
+            ThermalWorkMultiplier = Props.ThermalWorkMultiplier;
+            AddGizmo(() => CentralizedThermalDistributionUtility.GetPipeSwitchToggle(this));
             RescanNets(CentralizedThermalDistributionUtility.GetNetManager(parent.Map));
         }
 
@@ -46,6 +67,14 @@ namespace CentralizedThermalDistribution
             base.PostExposeData();
 
             Scribe_Values.Look(ref pipeColorSelection, "pipeColorSelection", PipeColorSelection.Auto);
+        }
+
+        public override string CompInspectStringExtra()
+        {
+            System.Text.StringBuilder output = new();
+            output.AppendLine(base.CompInspectStringExtra());
+            output.AppendLine("DEBUG ThermalWork: " + ThermalWork);
+            return output.ToString().Trim();
         }
 
         public override void SetNet(CoolantNet newNet)
@@ -68,10 +97,7 @@ namespace CentralizedThermalDistribution
             UpdateAttachedNet();
         }
 
-        public virtual void PushThermalLoad(float ThermalLoad)
-        {
-            return;
-        }
+        public abstract void PushThermalLoad(float ThermalLoad);
 
         public void RescanNets(CoolantNetManager manager)
         {

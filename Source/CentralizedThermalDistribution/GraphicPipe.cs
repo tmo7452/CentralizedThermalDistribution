@@ -7,7 +7,7 @@ namespace CentralizedThermalDistribution
 {
     public class GraphicPipe : Graphic_Linked
     {
-        public CompCoolant.PipeColor FlowType;
+        public CompCoolant.PipeColor pipeColor;
 
         public GraphicPipe()
         {
@@ -21,7 +21,7 @@ namespace CentralizedThermalDistribution
         public GraphicPipe(Graphic graphic, CompCoolant.PipeColor flowType)
         {
             subGraphic = graphic;
-            FlowType = flowType;
+            pipeColor = flowType;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace CentralizedThermalDistribution
         public GraphicPipe(Graphic graphic)
         {
             subGraphic = graphic;
-            FlowType = CompCoolant.PipeColor.Red;
+            pipeColor = CompCoolant.PipeColor.Red;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace CentralizedThermalDistribution
         public override bool ShouldLinkWith(IntVec3 vec, Thing parent)
         {
             return vec.InBounds(parent.Map) &&
-                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(vec, FlowType);
+                   CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(vec, pipeColor);
         }
 
 
@@ -71,13 +71,11 @@ namespace CentralizedThermalDistribution
                 LinkedDrawMatFrom(parent, parent.Position)
             );
 
-            for (var i = 0; i < 4; i++)
+            foreach (var adjacentPos in GenAdj.CardinalDirections)
             {
-                var intVec = parent.Position + GenAdj.CardinalDirections[i];
-
-                if (!intVec.InBounds(parent.Map) ||
-                    !CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(intVec, FlowType) ||
-                    intVec.GetTerrain(parent.Map).layerable)
+                if (!adjacentPos.InBounds(parent.Map) ||
+                    !CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(adjacentPos, pipeColor) ||
+                    adjacentPos.GetTerrain(parent.Map).layerable)
                 {
                     continue;
                 }
@@ -85,7 +83,9 @@ namespace CentralizedThermalDistribution
                 //var thingList = intVec.GetThingList(parent.Map);
 
                 //if (thingList.Any(predicate))
-                if (intVec.GetThingList(parent.Map).OfType<Building_CoolantPipe>().Any())
+
+                if (adjacentPos.GetThingList(parent.Map).OfType<Building_CoolantPipe>().Any()) //WTF????
+                //if (CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(adjacentPos, pipeColor))
                 {
                     continue;
                 }
@@ -94,9 +94,9 @@ namespace CentralizedThermalDistribution
                 //Printer_Plane.PrintPlane(layer, intVec.ToVector3ShiftedWithAltitude(parent.def.Altitude), Vector2.one, material2, 0f);
                 Printer_Plane.PrintPlane(
                     layer,
-                    intVec.ToVector3ShiftedWithAltitude(parent.def.Altitude),
+                    adjacentPos.ToVector3ShiftedWithAltitude(parent.def.Altitude),
                     Vector2.one,
-                    LinkedDrawMatFrom(parent, intVec));
+                    LinkedDrawMatFrom(parent, adjacentPos));
             }
         }
     }

@@ -30,16 +30,16 @@ namespace CentralizedThermalDistribution
             //foreach (var thingType in list)
             foreach (var thingType in center.GetThingList(map))
             {
-                if (!(thingType is Building_CoilVent))
-                {
+                if (!(thingType is Building))
                     continue;
-                }
 
-                var airVent = thingType as Building_CoilVent;
+                var coilVent = (thingType as Building).GetComp<CompCoolantConsumerCoilVent>();
+                if (coilVent == null)
+                    continue;
 
-                if (airVent.compCoolant.coolantNet != null)
+                if (coilVent.coolantNet != null)
                 {
-                    type = airVent.compCoolant.coolantNet.pipeColor;
+                    type = coilVent.coolantNet.pipeColor;
                 }
 
                 break;

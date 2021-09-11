@@ -28,10 +28,8 @@ namespace CentralizedThermalDistribution
             //    return AcceptanceReport.WasRejected;
             //}
 
-            var pipeBaseName = def.defName.Replace("Hidden", "");
-            return loc.GetThingList(map).OfType<Building_CoolantPipe>().Any(pipe => pipe.def.defName.Contains(pipeBaseName))
-                ? AcceptanceReport.WasRejected
-                : AcceptanceReport.WasAccepted;
+            var pipeColor = (def as ThingDef).GetCompProperties<CompProperties_Coolant>().pipeColor;
+            return CentralizedThermalDistributionUtility.GetNetManager(map).IsPipeAt(loc, pipeColor) ? AcceptanceReport.WasRejected : AcceptanceReport.WasAccepted;
         }
     }
 }

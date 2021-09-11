@@ -29,7 +29,7 @@ namespace CentralizedThermalDistribution
 
             var thingDef = designatorBuild?.PlacingDef as ThingDef;
 
-            if (thingDef?.comps.OfType<CompProperties_Coolant>().FirstOrDefault(x => x.flowType == FlowType) != null)
+            if (thingDef?.comps.OfType<CompProperties_Coolant>().FirstOrDefault(x => x.pipeColor == FlowType) != null)
             {
                 base.DrawLayer();
             }

@@ -65,7 +65,6 @@
   <ThingDef ParentName="CentralizedThermalDistribution_BaseWallCoilVent">
     <defName>WallCoilVentSmall</defName>
     <label>Small wall coil vent</label>
-    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
     <graphicData>
       <texPath>Things/Building/CoilVents/WallCoilVentSmall</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
@@ -88,8 +87,7 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <ThermalWorkMultiplier>1.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
@@ -104,7 +102,6 @@
   <ThingDef ParentName="CentralizedThermalDistribution_BaseWallCoilVent">
     <defName>WallCoilVent</defName>
     <label>Wall coil vent</label>
-    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
     <graphicData>
       <texPath>Things/Building/CoilVents/WallCoilVent</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
@@ -127,8 +124,7 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <ThermalWorkMultiplier>2.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
@@ -143,7 +139,6 @@
   <ThingDef ParentName="CentralizedThermalDistribution_BaseSurroundCoilVent">
     <defName>SurroundCoilVent</defName>
     <label>Surround coil vent</label>
-    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
     <graphicData>
       <texPath>Things/Building/CoilVents/SurroundCoilVent</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
@@ -166,8 +161,7 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <ThermalWorkMultiplier>4.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
@@ -182,7 +176,6 @@
   <ThingDef ParentName="CentralizedThermalDistribution_BaseSurroundCoilVent">
     <defName>SurroundCoilVentWide</defName>
     <label>Large surround coil vent</label>
-    <thingClass>CentralizedThermalDistribution.Building_CoilVent</thingClass>
     <size>(2,1)</size>
     <graphicData>
       <drawSize>(2,1)</drawSize>
@@ -207,8 +200,7 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <ThermalWorkMultiplier>8.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">

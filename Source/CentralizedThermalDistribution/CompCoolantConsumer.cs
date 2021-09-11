@@ -5,7 +5,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class CompCoolantConsumer : CompCoolantTrader
+    public abstract class CompCoolantConsumer : CompCoolantTrader
     {
         public const string AirFlowOutputKey = "CentralizedThermalDistribution.AirFlowOutput";
         public const string IntakeTempKey = "CentralizedThermalDistribution.Consumer.ConvertedTemperature";
@@ -43,25 +43,6 @@ namespace CentralizedThermalDistribution
             base.SetNet(newNet);
             if (coolantNet != null)
                 coolantNet.Consumers.Add(this);
-        }
-
-        /// <summary>
-        ///     Extra Component Inspection string
-        /// </summary>
-        /// <returns>String Containing information for Consumers</returns>
-        public override string CompInspectStringExtra()
-        {
-            if (!IsConnected())
-            {
-                return base.CompInspectStringExtra();
-            }
-
-            //if (!IsActive())
-            //{
-            //    return DisconnectedKey.Translate() + "\n" + base.CompInspectStringExtra();
-            //}
-
-            return base.CompInspectStringExtra();
         }
 
         /// <summary>

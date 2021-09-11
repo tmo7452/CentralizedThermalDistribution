@@ -4,14 +4,9 @@ namespace CentralizedThermalDistribution
 {
     public class CompProperties_Coolant : CompProperties
     {
-        public float baseAirExhaust;
 
-        public float baseAirFlow;
-
-        public CompCoolant.PipeColor flowType;
-
-        public float thermalCapacity;
-        public bool transmitsAir;
+        public CompCoolant.PipeColor pipeColor = CompCoolant.PipeColor.None;
+        public bool pipeIsHidden = false;
 
         public float ThermalWorkMultiplier = 1.00f;
         public float ProviderMaxTemperatureDelta;

@@ -21,7 +21,6 @@
     <defName>AirSourceCondenserSmall</defName>
     <label>Small condenser</label>
     <description>Decreases coolant temperature by heating the surrounding air.</description>
-    <thingClass>CentralizedThermalDistribution.Building_AirSourceCondenser</thingClass>
     <graphicData>
       <texPath>Things/Building/CondenserSmall</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
@@ -63,9 +62,7 @@
         <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
-        <baseAirFlow>300.0</baseAirFlow>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
         <ThermalWorkMultiplier>-1.00</ThermalWorkMultiplier>
         <ProviderMaxTemperatureDelta>50.0</ProviderMaxTemperatureDelta>
       </li>
@@ -90,7 +87,6 @@
     <defName>AirSourceHeatPumpSmall</defName>
     <label>Small heat pump</label>
     <description>Increases coolant temperature by cooling the surrounding air.</description>
-    <thingClass>CentralizedThermalDistribution.Building_AirSourceCondenser</thingClass>
     <graphicData>
       <texPath>Things/Building/HeatPumpSmall</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
@@ -132,9 +128,7 @@
         <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
-        <baseAirFlow>300.0</baseAirFlow>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
         <ProviderMaxTemperatureDelta>35.0</ProviderMaxTemperatureDelta>
       </li>
@@ -159,7 +153,6 @@
     <defName>ElectricFurnace</defName>
     <label>Electric furnace</label>
     <description>Increases coolant temperature by consuming electricity.</description>
-    <thingClass>CentralizedThermalDistribution.Building_ElectricFurnace</thingClass>
     <graphicData>
       <texPath>Things/Building/ElectricFurnace</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -200,8 +193,7 @@
         <compClass>CompPowerTrader</compClass>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantProviderElectricFurnace</compClass>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_TempControl">
@@ -222,7 +214,6 @@
     <defName>WoodFiredFurnace</defName>
     <label>wood-fired furnace</label>
     <description>Increases coolant temperature by consuming wood. Must be periodically loaded with wood fuel by hand.</description>
-    <thingClass>CentralizedThermalDistribution.Building_FueledFurnace</thingClass>
     <graphicData>
       <texPath>Things/Building/WoodFiredFurnace</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -264,8 +255,7 @@
         <lowPowerConsumptionFactor>1.0</lowPowerConsumptionFactor>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
-        <flowType>Trader</flowType>
+        <compClass>CentralizedThermalDistribution.CompCoolantProviderFueledFurnace</compClass>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable" />

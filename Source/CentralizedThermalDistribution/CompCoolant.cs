@@ -3,7 +3,7 @@
 namespace CentralizedThermalDistribution
 {
     // Member of a coolant network
-    public class CompCoolant : ThingComp
+    public abstract class CompCoolant : ThingComp
     {
         public enum PipeColor
         {
@@ -15,6 +15,7 @@ namespace CentralizedThermalDistribution
             Green = 4,
         }
         public const int PipeColorCount = 4;
+        public const int tickRateInterval = 50; // Before this can change, the following methods would require rework: CompTick(), CompTickRare()
         public static int PipeColorToIndex(PipeColor color)
         {
             return (int)color - 1;
@@ -32,9 +33,10 @@ namespace CentralizedThermalDistribution
         public const string FrozenAirKey = "CentralizedThermalDistribution.FrozenAir";
         public const string TotalNetworkAirKey = "CentralizedThermalDistribution.TotalNetworkAir";
 
-        public PipeColor BasePipeColor => Props.flowType;
+        public PipeColor BasePipeColor => Props.pipeColor;
         public PipeColor CurrentPipeColor { get; private set; } = PipeColor.None;
 
+        public bool IsConnected => coolantNet != null;
         public uint NetID { get; private set; } = 0;
 
         public CoolantNet coolantNet { get; private set; }
@@ -66,10 +68,7 @@ namespace CentralizedThermalDistribution
         ///     Check if connected to coolant network.
         /// </summary>
         /// <returns></returns>
-        public virtual bool IsConnected()
-        {
-            return coolantNet != null;
-        }
+        
 
         /// <summary>
         ///     Inspect Component String
@@ -77,29 +76,36 @@ namespace CentralizedThermalDistribution
         /// <returns>String to be Displayed on the Component window</returns>
         public override string CompInspectStringExtra()
         {
-            if (!IsConnected())
+            System.Text.StringBuilder output = new();
+            output.AppendLine(base.CompInspectStringExtra());
+
+            if (!IsConnected)
             {
-                return NotConnectedKey.Translate();
+                output.AppendLine(NotConnectedKey.Translate());
             }
-
-            string output; // = ConnectedKey.Translate();
-
-            //if (pipeColor != CoolantPipeColor.Any)
-            //{
-            //    output += "\n";
-            //    output += GetAirTypeString(pipeColor);
-            //}
-
-            if (coolantNet.IsNetActive())
-                output = CurrentPipeColor + " net coolant temp: " + coolantNet.GetNetCoolantTemperature();
             else
-                output = CurrentPipeColor + " net inactive";
+            {
+                if (coolantNet.IsNetActive())
+                    output.AppendLine("DEBUG " + CurrentPipeColor + " net coolant temp: " + coolantNet.GetNetCoolantTemperature());
+                else
+                    output.AppendLine("DEBUG " + CurrentPipeColor + " net inactive");
+            }
+            return output.ToString().Trim();
+        }
 
+        protected abstract void CoolantTick(int tickMultiplier);
 
-            //res += "\n";
-            //res += TotalNetworkAirKey.Translate(coolantNet.CurrentIntakeAir);
+        public override void CompTick()
+        {
+            if (parent.IsHashIntervalTick(50))
+                CoolantTick(1);
+            base.CompTick();
+        }
 
-            return output;
+        public override void CompTickRare()
+        {
+            CoolantTick(5);
+            base.CompTickRare();
         }
 
         /// <summary>
@@ -112,15 +118,15 @@ namespace CentralizedThermalDistribution
             switch (type)
             {
                 case PipeColor.Red:
-                    GraphicsLoader.GraphicHotPipeOverlay.Print(layer, parent, 0);
+                    GraphicsLoader.GraphicRedPipeOverlay.Print(layer, parent, 0);
                     break;
 
                 case PipeColor.Blue:
-                    GraphicsLoader.GraphicColdPipeOverlay.Print(layer, parent, 0);
+                    GraphicsLoader.GraphicBluePipeOverlay.Print(layer, parent, 0);
                     break;
 
                 case PipeColor.Cyan:
-                    GraphicsLoader.GraphicFrozenPipeOverlay.Print(layer, parent, 0);
+                    GraphicsLoader.GraphicCyanPipeOverlay.Print(layer, parent, 0);
                     break;
 
                 default:

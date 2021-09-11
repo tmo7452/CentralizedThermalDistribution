@@ -4,7 +4,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class Building_AirSourceCondenser : Building_CoolantProvider
+    public class CompCoolantProviderAirSourceCondenser : CompCoolantProvider
     {
         public enum MinEfficiencySelection
         {
@@ -30,27 +30,27 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="map">RimWorld Map</param>
         /// <param name="respawningAfterLoad">Unused flag</param>
-        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            base.SpawnSetup(map, respawningAfterLoad);
-            MaxTemperatureDelta = compCoolant.Props.ProviderMaxTemperatureDelta * 2; // For why *2, see comments for "Thermal efficiency check"
+            base.PostSpawnSetup(respawningAfterLoad);
+            MaxTemperatureDelta = Props.ProviderMaxTemperatureDelta * 2; // For why *2, see comments for "Thermal efficiency check"
             AddGizmo(() => CentralizedThermalDistributionUtility.GetMinEfficiencyToggle(this));
         }
 
         /// <summary>
         ///     Method called during Game Save/Load
         /// </summary>
-        public override void ExposeData()
+        public override void PostExposeData()
         {
-            base.ExposeData();
+            base.PostExposeData();
 
             Scribe_Values.Look(ref minEfficiencySelection, "minEfficiencySelection", MinEfficiencySelection.E25);
         }
 
-        public override string GetInspectString()
+        public override string CompInspectStringExtra()
         {
             System.Text.StringBuilder output = new();
-            output.AppendLine(base.GetInspectString());
+            output.AppendLine(base.CompInspectStringExtra());
             output.AppendLine("DEBUG AirFlowEfficiency: " + (int)(AirFlowEfficiency * 100) + "%");
             output.AppendLine("DEBUG TotalEfficiency: " + TotalEfficiency);
             return output.ToString().Trim();
@@ -62,11 +62,11 @@ namespace CentralizedThermalDistribution
 
             // === Air blockage check ===
             // Count number of blocked adjacent cells
-            var adjList = GenAdj.CellsAdjacentCardinal(Position, Rotation, def.Size).ToList();
+            var adjList = GenAdj.CellsAdjacentCardinal(parent.Position, parent.Rotation, parent.def.Size).ToList();
             int unblockedAdjacent = 0;
             foreach (var intVec in adjList)
             {
-                if (intVec.Impassable(Map))
+                if (intVec.Impassable(parent.Map))
                 {
                     continue;
                 }
@@ -83,7 +83,7 @@ namespace CentralizedThermalDistribution
             // Bonus efficiency if ambient temp is closer to desired temp than coolant is (for example, 400% if delta is MaxTemperatureDifference in the opposite direction)
             // The parabolic efficiency curve is deceptively agressive. We double the value of MaxTemperatureDifference (under SpawnSetup), so in-game the result is accurate with efficiency cutoff at 25%.
             // https://www.desmos.com/calculator/5uosg4hpca
-            var tempDelta = System.Math.Sign(ThermalWorkMultiplier) * (Position.GetTemperature(Map) - compCoolant.CoolantTemperature);
+            var tempDelta = System.Math.Sign(ThermalWorkMultiplier) * (parent.Position.GetTemperature(parent.Map) - CoolantTemperature);
             if (tempDelta > -MaxTemperatureDelta)
             {
                 // ThermalEfficiency = (tempDelta + MaxTemperatureDifference)^2 / MaxTemperatureDifference^2
@@ -107,8 +107,8 @@ namespace CentralizedThermalDistribution
         public override void DoThermalWork(int tickMultiplier)
         {
             ThermalWork = TotalEfficiency * AirSourceCondenserMultiplier * ThermalWorkMultiplier * tickMultiplier;
-            compCoolant.PushThermalLoad(ThermalWork); // Push to coolant
-            GenTemperature.PushHeat(Position, base.Map, (System.Math.Abs(ThermalWork) * WasteHeatMultiplier) - ThermalWork); // Push exhaust (negative ThermalWork)
+            PushThermalLoad(ThermalWork); // Push to coolant
+            GenTemperature.PushHeat(parent.Position, parent.Map, (System.Math.Abs(ThermalWork) * WasteHeatMultiplier) - ThermalWork); // Push exhaust (negative ThermalWork)
         }
     }
 }

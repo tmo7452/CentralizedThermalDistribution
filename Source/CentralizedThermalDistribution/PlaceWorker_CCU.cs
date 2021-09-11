@@ -45,7 +45,7 @@ namespace CentralizedThermalDistribution
         /// <summary>
         ///     Place Worker for Climate Units.
         ///     Checks:
-        ///     - Current Cell shouldn't have an Air Flow Pipe (Since they already have a Pipe)
+        ///     - Current Cell shouldn't have an Air Flow Pipe (Since they already have a Pipe) EDIT: Removed
         ///     - South Cell from Center musn't be Impassable
         /// </summary>
         /// <param name="def">The Def Being Built</param>
@@ -61,10 +61,10 @@ namespace CentralizedThermalDistribution
             //var thingList = center.GetThingList(map);
 
             //if (thingList.OfType<Building_AirPipe>().Any())
-            if (center.GetThingList(map).OfType<Building_CoolantPipe>().Any())
-            {
-                return AcceptanceReport.WasRejected;
-            }
+            //if (center.GetThingList(map).OfType<Building_CoolantPipe>().Any())
+            //{
+            //    return AcceptanceReport.WasRejected;
+            //}
 
             if (def == null)
             {

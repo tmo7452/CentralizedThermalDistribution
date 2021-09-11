@@ -4,7 +4,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class Building_ElectricFurnace : Building_CoolantProvider
+    public class CompCoolantProviderElectricFurnace : CompCoolantProvider
     {
         private const float ElectricFurnaceMultiplier = 0.04f; // Multipler unique to this provider type
 
@@ -15,9 +15,9 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="map">RimWorld Map</param>
         /// <param name="respawningAfterLoad">Unused flag</param>
-        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            base.SpawnSetup(map, respawningAfterLoad);
+            base.PostSpawnSetup(respawningAfterLoad);
 
             WattageSetting = 800; //TEMP
         }
@@ -34,7 +34,7 @@ namespace CentralizedThermalDistribution
         {
             compPowerTrader.PowerOutput = -WattageSetting; //This will override what was set in Building_CoolantProvider.CoolantTick()
             ThermalWork = WattageSetting * ElectricFurnaceMultiplier * ThermalWorkMultiplier * tickMultiplier;
-            compCoolant.PushThermalLoad(ThermalWork); // Push to coolant
+            PushThermalLoad(ThermalWork); // Push to coolant
         }
     }
 }

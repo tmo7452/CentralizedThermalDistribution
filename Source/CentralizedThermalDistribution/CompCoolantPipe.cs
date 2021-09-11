@@ -66,5 +66,10 @@ namespace CentralizedThermalDistribution
         {
             return CentralizedThermalDistributionUtility.GetNetManager(parent.Map).GetNet(NetID);
         }
+
+        protected override void CoolantTick(int tickMultiplier)
+        {
+            return;
+        }
     }
 }

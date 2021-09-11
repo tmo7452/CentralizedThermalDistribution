@@ -4,7 +4,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public class Building_FueledFurnace : Building_CoolantProvider
+    public class CompCoolantProviderFueledFurnace : CompCoolantProvider
     {
         public CompRefuelable compRefuelable;
 
@@ -19,15 +19,15 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="map">RimWorld Map</param>
         /// <param name="respawningAfterLoad">Unused flag</param>
-        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            base.SpawnSetup(map, respawningAfterLoad);
-            compRefuelable = GetComp<CompRefuelable>();
+            base.PostSpawnSetup(respawningAfterLoad);
+            compRefuelable = parent.GetComp<CompRefuelable>();
 
             compTempControl.consumptionModeString = null; // Disables printing the consumption mode, since it uses same power regardless.
 
             highFuelConsumptionRate = compRefuelable.Props.fuelConsumptionRate;
-            lowFuelConsumptionRate = highFuelConsumptionRate * compCoolant.Props.ProviderLowFuelConsumptionFactor;
+            lowFuelConsumptionRate = highFuelConsumptionRate * Props.ProviderLowFuelConsumptionFactor;
         }
 
         public override void CheckStatus()
@@ -48,12 +48,12 @@ namespace CentralizedThermalDistribution
         public override void DoThermalWork(int tickMultiplier)
         {
             ThermalWork = FueledFurnaceMultiplier * ThermalWorkMultiplier * tickMultiplier;
-            compCoolant.PushThermalLoad(ThermalWork); // Push to coolant
+            PushThermalLoad(ThermalWork); // Push to coolant
         }
 
-        public override void Tick()
+        public override void CompTick()
         {
-            base.Tick();
+            base.CompTick();
 
             //Consume fuel if online
             if (status != Status.Offline)

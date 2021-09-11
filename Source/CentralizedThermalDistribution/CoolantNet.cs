@@ -47,7 +47,7 @@ namespace CentralizedThermalDistribution
 
             foreach (var provider in Providers)
             {
-                if (!provider.IsConnected() || !provider.IsActive()) continue;
+                if (!provider.IsConnected || !provider.IsActiveOnNetwork) continue;
 
                 massSum += provider.CoolantThermalMass;
                 energySum += provider.CoolantThermalMass * provider.CoolantTemperature;
@@ -60,7 +60,7 @@ namespace CentralizedThermalDistribution
             foreach (var consumer in Consumers)
             {
 
-                if (!consumer.IsConnected()) continue;
+                if (!consumer.IsConnected) continue;
 
                 thermalLoadSum += consumer.PendingThermalLoad;
                 consumer.PendingThermalLoad = 0;
@@ -70,7 +70,7 @@ namespace CentralizedThermalDistribution
 
             foreach (var provider in Providers)
             {
-                if (!provider.IsConnected() || !provider.IsActive()) continue;
+                if (!provider.IsConnected || !provider.IsActiveOnNetwork) continue;
 
                 provider.CoolantTemperature = CoolantTemperature;
                 provider.PushThermalLoad(loadPerUnitMass * provider.CoolantThermalMass);
