@@ -13,11 +13,12 @@ namespace CentralizedThermalDistribution
             E50 = 50, // 50%
             E80 = 80, // 80%
         }
+        private const MinEfficiencySelection DefaultMinEfficiencySelection = MinEfficiencySelection.E25;
 
         private const float AirSourceCondenserMultiplier = 40.0f; // Multipler unique to this provider type
         private const float WasteHeatMultiplier = 0.15f; // This percentage of work done is additionally output as waste heat, regardless of operation mode.
         private float MaxTemperatureDelta; // Positive degrees Celcius. Efficiency decreases, up to this limit, as the coolant is heated/chilled beyond ambient temp.
-        public MinEfficiencySelection minEfficiencySelection = MinEfficiencySelection.E25; // If operational efficiency drops below this percent, unit will go idle.
+        public MinEfficiencySelection minEfficiencySelection = DefaultMinEfficiencySelection; // If operational efficiency drops below this percent, unit will go idle.
 
         public bool IsAirBlocked = false;
         public bool IsEfficiencyLow = false;
@@ -34,7 +35,7 @@ namespace CentralizedThermalDistribution
         {
             base.PostSpawnSetup(respawningAfterLoad);
             MaxTemperatureDelta = Props.ProviderMaxTemperatureDelta * 2; // For why *2, see comments for "Thermal efficiency check"
-            AddGizmo(() => CentralizedThermalDistributionUtility.GetMinEfficiencyToggle(this));
+            AddGizmo(() => GetMinEfficiencyToggle(this));
         }
 
         /// <summary>
@@ -109,6 +110,65 @@ namespace CentralizedThermalDistribution
             ThermalWork = TotalEfficiency * AirSourceCondenserMultiplier * ThermalWorkMultiplier * tickMultiplier;
             PushThermalLoad(ThermalWork); // Push to coolant
             GenTemperature.PushHeat(parent.Position, parent.Map, (System.Math.Abs(ThermalWork) * WasteHeatMultiplier) - ThermalWork); // Push exhaust (negative ThermalWork)
+        }
+
+        /// <summary>
+        ///     Gizmo for changing condenser minimum efficiency setting.
+        /// </summary>
+        /// <param name="compCoolant">Component Asking for Gizmo</param>
+        /// <returns>Action Button Gizmo</returns>
+        public static Command_Action GetMinEfficiencyToggle(CompCoolantProviderAirSourceCondenser compCondenser)
+        {
+            UnityEngine.Texture2D icon;
+            string label;
+
+            switch (compCondenser.minEfficiencySelection)
+            {
+
+                case MinEfficiencySelection.E10:
+                    //label = SwitchPipeRedKey.Translate();
+                    label = "Efficiency Cutoff: 10%";
+                    icon = ContentFinder<UnityEngine.Texture2D>.Get("UI/MinEfficiencySelect_E10");
+                    break;
+
+                case MinEfficiencySelection.E25:
+                default:
+                    //label = SwitchPipeBlueKey.Translate();
+                    label = "Efficiency Cutoff: 25%";
+                    icon = ContentFinder<UnityEngine.Texture2D>.Get("UI/MinEfficiencySelect_E25");
+                    break;
+
+                case MinEfficiencySelection.E50:
+                    //label = SwitchPipeCyanKey.Translate();
+                    label = "Efficiency Cutoff: 50%";
+                    icon = ContentFinder<UnityEngine.Texture2D>.Get("UI/MinEfficiencySelect_E50");
+                    break;
+
+                case MinEfficiencySelection.E80:
+                    //label = SwitchPipeAutoKey.Translate();
+                    label = "Efficiency Cutoff: 80%";
+                    icon = ContentFinder<UnityEngine.Texture2D>.Get("UI/MinEfficiencySelect_E80");
+                    break;
+            }
+
+            return new Command_Action
+            {
+                defaultLabel = label,
+                defaultDesc = "CentralizedThermalDistribution.Command.SwitchPipe.Desc".Translate(),
+                //hotKey = KeyBindingDefOf.Misc4,
+                icon = icon,
+                action = delegate
+                {
+                    compCondenser.minEfficiencySelection = compCondenser.minEfficiencySelection switch
+                    {
+                        MinEfficiencySelection.E10 => MinEfficiencySelection.E25,
+                        MinEfficiencySelection.E25 => MinEfficiencySelection.E50,
+                        MinEfficiencySelection.E50 => MinEfficiencySelection.E80,
+                        MinEfficiencySelection.E80 => MinEfficiencySelection.E10,
+                        _ => DefaultMinEfficiencySelection
+                    };
+                }
+            };
         }
     }
 }

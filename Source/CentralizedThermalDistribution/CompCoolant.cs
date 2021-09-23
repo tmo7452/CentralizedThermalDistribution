@@ -39,6 +39,7 @@ namespace CentralizedThermalDistribution
         public bool IsConnected => coolantNet != null;
         public uint NetID { get; private set; } = 0;
 
+        public CoolantNetManager coolantNetManager { get; private set; }
         public CoolantNet coolantNet { get; private set; }
 
         public CompProperties_Coolant Props => (CompProperties_Coolant)props;
@@ -50,12 +51,23 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
+        ///     Post Spawn for Component
+        /// </summary>
+        /// <param name="respawningAfterLoad">Unused Flag</param>
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            base.PostSpawnSetup(respawningAfterLoad);
+            coolantNetManager = parent.Map.GetComponent<CoolantNetManager>();
+        }
+
+        /// <summary>
         ///     Building de-spawned from the map
         /// </summary>
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
             SetNet(null);
+            coolantNetManager = null;
             base.PostDeSpawn(map);
         }
 

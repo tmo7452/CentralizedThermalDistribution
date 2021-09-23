@@ -22,7 +22,7 @@ namespace CentralizedThermalDistribution
         public override void PostDeSpawn(Map map)
         {
             // SetPipeColor(PipeColor.None); // Can't use this because it assumes parent.map is valid.
-            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterPipe(this);
+            coolantNetManager.DeregisterPipe(this);
             base.SetPipeColor(PipeColor.None);
             base.PostDeSpawn(map);
         }
@@ -31,12 +31,12 @@ namespace CentralizedThermalDistribution
         {
             if (CurrentPipeColor != PipeColor.None)
             {
-                CentralizedThermalDistributionUtility.GetNetManager(parent.Map).DeregisterPipe(this);
+                coolantNetManager.DeregisterPipe(this);
             }
             base.SetPipeColor(newColor);
             if (CurrentPipeColor != PipeColor.None)
             {
-                CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterPipe(this);
+                coolantNetManager.RegisterPipe(this);
             }
 
             if (parent.Graphic is Graphic_Wrapper_CoolantPipe)
@@ -69,7 +69,7 @@ namespace CentralizedThermalDistribution
         /// <returns>CoolantNet its connected to</returns>
         public CoolantNet GetNet()
         {
-            return CentralizedThermalDistributionUtility.GetNetManager(parent.Map).GetNet(NetID);
+            return coolantNetManager.GetNet(NetID);
         }
 
         protected override void CoolantTick(int tickMultiplier)

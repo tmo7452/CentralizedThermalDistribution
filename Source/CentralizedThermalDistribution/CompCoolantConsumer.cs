@@ -23,7 +23,7 @@ namespace CentralizedThermalDistribution
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterConsumer(this);
+            coolantNetManager.RegisterConsumer(this);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterConsumer(this);
+            coolantNetManager.DeregisterConsumer(this);
             base.PostDeSpawn(map);
         }
 

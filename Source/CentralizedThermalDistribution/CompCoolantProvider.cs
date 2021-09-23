@@ -51,7 +51,7 @@ namespace CentralizedThermalDistribution
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterProvider(this);
+            coolantNetManager.RegisterProvider(this);
             CoolantThermalMass = Props.ProviderCoolantThermalMass;
             CoolantTemperature = parent.Position.GetTemperature(parent.Map);
             compPowerTrader = parent.GetComp<CompPowerTrader>();
@@ -83,7 +83,7 @@ namespace CentralizedThermalDistribution
         /// <param name="map">RimWorld Map</param>
         public override void PostDeSpawn(Map map)
         {
-            CentralizedThermalDistributionUtility.GetNetManager(map).DeregisterProvider(this);
+            coolantNetManager.DeregisterProvider(this);
             base.PostDeSpawn(map);
         }
 

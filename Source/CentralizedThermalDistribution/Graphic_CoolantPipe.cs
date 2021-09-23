@@ -27,7 +27,7 @@ namespace CentralizedThermalDistribution
             }
             else
             {
-                return vec.InBounds(parent.Map) && CentralizedThermalDistributionUtility.GetNetManager(parent.Map).IsPipeAt(vec, pipeColor); //TODO: Remove GetNetManager call.
+                return vec.InBounds(parent.Map) && parent.Map.GetComponent<CoolantNetManager>().IsPipeAt(vec, pipeColor);
             }
         }
     }

@@ -256,7 +256,7 @@ namespace CentralizedThermalDistribution
 
             // Assign new nets to attached traders
             foreach (var trader in Traders)
-                trader.RescanNets(this);
+                trader.RescanNets();
         }
 
         // Given a single starting pipe, follow adjacent pipes and create a CoolantNet containing them.

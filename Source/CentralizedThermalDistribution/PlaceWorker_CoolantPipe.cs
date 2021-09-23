@@ -29,7 +29,7 @@ namespace CentralizedThermalDistribution
             //}
 
             var pipeColor = (def as ThingDef).GetCompProperties<CompProperties_Coolant>().pipeColor;
-            return CentralizedThermalDistributionUtility.GetNetManager(map).IsPipeAt(loc, pipeColor) ? AcceptanceReport.WasRejected : AcceptanceReport.WasAccepted;
+            return map.GetComponent<CoolantNetManager>().IsPipeAt(loc, pipeColor) ? AcceptanceReport.WasRejected : AcceptanceReport.WasAccepted;
         }
     }
 }

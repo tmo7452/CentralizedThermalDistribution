@@ -3,10 +3,10 @@ using RimWorld;
 
 namespace CentralizedThermalDistribution
 {
-    public class CompTempControlEx : CompTempControl
-    {
-		// Need to be able to control what gets printed during inspection.
+	// CompTempControl, but with ability to change what gets printed during inspection.
 
+	public class CompTempControlEx : CompTempControl
+    {
 		public string targetTempString = "TargetTemperature";
 		public string consumptionModeString = "PowerConsumptionMode";
 		public string consumptionHighString = "PowerConsumptionHigh";

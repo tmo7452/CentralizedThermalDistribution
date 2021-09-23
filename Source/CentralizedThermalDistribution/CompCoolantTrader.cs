@@ -7,6 +7,11 @@ namespace CentralizedThermalDistribution
 {
     public abstract class CompCoolantTrader : CompCoolant
     {
+        private const string SwitchPipeAutoKey = "CentralizedThermalDistribution.Command.SwitchPipe.Auto";
+        private const string SwitchPipeRedKey = "CentralizedThermalDistribution.Command.SwitchPipe.Red";
+        private const string SwitchPipeBlueKey = "CentralizedThermalDistribution.Command.SwitchPipe.Blue";
+        private const string SwitchPipeCyanKey = "CentralizedThermalDistribution.Command.SwitchPipe.Cyan";
+        private const string SwitchPipeGreenKey = "CentralizedThermalDistribution.Command.SwitchPipe.Green";
         public enum PipeColorSelection
         {
             Red = 0,
@@ -15,6 +20,7 @@ namespace CentralizedThermalDistribution
             Green = 4,
             Auto = 3,
         }
+        public const PipeColorSelection DefaultPipeColorSelection = PipeColorSelection.Auto;
 
         public static bool PipeColorMatchesSelection(PipeColor color, PipeColorSelection selection)
         {
@@ -24,11 +30,21 @@ namespace CentralizedThermalDistribution
                 PipeColor.Blue => (selection == PipeColorSelection.Blue) || (selection == PipeColorSelection.Auto),
                 PipeColor.Cyan => (selection == PipeColorSelection.Cyan) || (selection == PipeColorSelection.Auto),
                 PipeColor.Green => (selection == PipeColorSelection.Green) || (selection == PipeColorSelection.Auto),
-                _ => false, // Default, I guess. Visual Studio generated this beauty.
+                _ => false
             };
         }
 
-        public PipeColorSelection pipeColorSelection = PipeColorSelection.Auto;
+        private PipeColorSelection _pipeColorSelection = DefaultPipeColorSelection;
+        public PipeColorSelection pipeColorSelection
+        {
+            get => _pipeColorSelection;
+            set
+            {
+                _pipeColorSelection = value;
+                UpdateAttachedNet();
+            }
+        }
+
         private System.Collections.Generic.List<CoolantNet> AvailableNets = new();
         private System.Collections.Generic.List<System.Func<Gizmo>> Gizmos = new(); // A list of lambda functions to be called during gizmo checks.
 
@@ -54,8 +70,9 @@ namespace CentralizedThermalDistribution
             base.PostSpawnSetup(respawningAfterLoad);
             Props.pipeColor = PipeColor.Trader;
             ThermalWorkMultiplier = Props.ThermalWorkMultiplier;
-            AddGizmo(() => CentralizedThermalDistributionUtility.GetPipeSwitchToggle(this));
-            RescanNets(CentralizedThermalDistributionUtility.GetNetManager(parent.Map));
+            AddGizmo(() => GetPipeSwitchToggle(this));
+            RescanNets();
+            pipeColorSelection = DefaultPipeColorSelection;
         }
 
         /// <summary>
@@ -64,8 +81,9 @@ namespace CentralizedThermalDistribution
         public override void PostExposeData()
         {
             base.PostExposeData();
-
-            Scribe_Values.Look(ref pipeColorSelection, "pipeColorSelection", PipeColorSelection.Auto);
+            var ExposedPipeColorSelection = pipeColorSelection;
+            Scribe_Values.Look(ref ExposedPipeColorSelection, "pipeColorSelection", DefaultPipeColorSelection);
+            if (ExposedPipeColorSelection != pipeColorSelection) pipeColorSelection = ExposedPipeColorSelection;
         }
 
         public override string CompInspectStringExtra()
@@ -86,21 +104,11 @@ namespace CentralizedThermalDistribution
                 coolantNet.Traders.Add(this);
         }
 
-        /// <summary>
-        ///     Set the Pipe Selection
-        /// </summary>
-        /// <param name="selection">Priority to Switch to.</param>
-        public void SetSelection(PipeColorSelection selection)
-        {
-            pipeColorSelection = selection;
-            UpdateAttachedNet();
-        }
-
         public abstract void PushThermalLoad(float ThermalLoad);
 
-        public void RescanNets(CoolantNetManager manager)
+        public void RescanNets()
         {
-            
+
             AvailableNets = new();
 
             // For each cell we occupy, scan for any pipes and add their networks.
@@ -108,9 +116,9 @@ namespace CentralizedThermalDistribution
             {
                 for (int pipeColorIndex = 0; pipeColorIndex < PipeColorCount; pipeColorIndex++)
                 {
-                    if (manager.IsPipeAt(pos, pipeColorIndex))
+                    if (coolantNetManager.IsPipeAt(pos, pipeColorIndex))
                     {
-                        CoolantNet net = manager.GetPipeAt(pos, pipeColorIndex).coolantNet;
+                        CoolantNet net = coolantNetManager.GetPipeAt(pos, pipeColorIndex).coolantNet;
                         if (AvailableNets.Contains(net))
                             continue;
                         AvailableNets.Add(net);
@@ -137,6 +145,68 @@ namespace CentralizedThermalDistribution
         {
             if (AvailableNets.Contains(net))
                 AvailableNets.Remove(net);
+        }
+
+        /// <summary>
+        ///     Gizmo for Changing Pipes
+        /// </summary>
+        /// <param name="compCoolant">Component Asking for Gizmo</param>
+        /// <returns>Action Button Gizmo</returns>
+        public static Command_Action GetPipeSwitchToggle(CompCoolantTrader compCoolant)
+        {
+            var currentSelection = compCoolant.pipeColorSelection;
+            Texture2D icon;
+            string label;
+
+            switch (currentSelection)
+            {
+
+                case PipeColorSelection.Red:
+                    label = SwitchPipeRedKey.Translate();
+                    icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Red");
+                    break;
+
+                case PipeColorSelection.Blue:
+                    label = SwitchPipeBlueKey.Translate();
+                    icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Blue");
+                    break;
+
+                case PipeColorSelection.Cyan:
+                    label = SwitchPipeCyanKey.Translate();
+                    icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Cyan");
+                    break;
+
+                case PipeColorSelection.Green:
+                    label = SwitchPipeGreenKey.Translate();
+                    icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Green");
+                    break;
+
+                case PipeColorSelection.Auto:
+                default:
+                    label = SwitchPipeAutoKey.Translate();
+                    icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Auto");
+                    break;
+            }
+
+            return new Command_Action
+            {
+                defaultLabel = label,
+                defaultDesc = "CentralizedThermalDistribution.Command.SwitchPipe.Desc".Translate(),
+                //hotKey = KeyBindingDefOf.Misc4,
+                icon = icon,
+                action = delegate
+                {
+                    compCoolant.pipeColorSelection = currentSelection switch
+                    {
+                        PipeColorSelection.Auto => PipeColorSelection.Red,
+                        PipeColorSelection.Red => PipeColorSelection.Blue,
+                        PipeColorSelection.Blue => PipeColorSelection.Cyan,
+                        PipeColorSelection.Cyan => PipeColorSelection.Green,
+                        PipeColorSelection.Green => PipeColorSelection.Auto,
+                        _ => DefaultPipeColorSelection
+                    };
+                }
+            };
         }
     }
 }
