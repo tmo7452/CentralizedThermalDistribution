@@ -10,6 +10,7 @@ namespace CentralizedThermalDistribution
         private const string SwitchPipeRedKey = "CentralizedThermalDistribution.Command.SwitchPipe.Red";
         private const string SwitchPipeBlueKey = "CentralizedThermalDistribution.Command.SwitchPipe.Blue";
         private const string SwitchPipeCyanKey = "CentralizedThermalDistribution.Command.SwitchPipe.Cyan";
+        private const string SwitchPipeGreenKey = "CentralizedThermalDistribution.Command.SwitchPipe.Green";
 
         /// <summary>
         ///     Get the Network Manager of the Map
@@ -50,6 +51,11 @@ namespace CentralizedThermalDistribution
                     icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Cyan");
                     break;
 
+                case CompCoolantTrader.PipeColorSelection.Green:
+                    label = SwitchPipeGreenKey.Translate();
+                    icon = ContentFinder<Texture2D>.Get("UI/CoolantPipeSelect_Green");
+                    break;
+
                 case CompCoolantTrader.PipeColorSelection.Auto:
                 default:
                     label = SwitchPipeAutoKey.Translate();
@@ -80,6 +86,10 @@ namespace CentralizedThermalDistribution
                             break;
 
                         case CompCoolantTrader.PipeColorSelection.Cyan:
+                            compCoolant.SetSelection(CompCoolantTrader.PipeColorSelection.Green);
+                            break;
+
+                        case CompCoolantTrader.PipeColorSelection.Green:
                         default:
                             compCoolant.SetSelection(CompCoolantTrader.PipeColorSelection.Auto);
                             break;

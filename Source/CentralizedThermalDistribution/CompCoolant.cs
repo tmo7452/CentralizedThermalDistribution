@@ -113,9 +113,9 @@ namespace CentralizedThermalDistribution
         /// </summary>
         /// <param name="layer">Section Layer that is being Printed</param>
         /// <param name="type">AirFlow Type</param>
-        public void PrintForGrid(SectionLayer layer, PipeColor type)
+        public void PrintOverlay(SectionLayer layer)
         {
-            switch (type)
+            switch (BasePipeColor)
             {
                 case PipeColor.Red:
                     GraphicsLoader.GraphicRedPipeOverlay.Print(layer, parent, 0);
@@ -127,6 +127,14 @@ namespace CentralizedThermalDistribution
 
                 case PipeColor.Cyan:
                     GraphicsLoader.GraphicCyanPipeOverlay.Print(layer, parent, 0);
+                    break;
+
+                case PipeColor.Green:
+                    GraphicsLoader.GraphicGreenPipeOverlay.Print(layer, parent, 0);
+                    break;
+
+                case PipeColor.Trader:
+                    GraphicsLoader.GraphicTraderPipeOverlay.Print(layer, parent, 0);
                     break;
 
                 default:
@@ -141,27 +149,14 @@ namespace CentralizedThermalDistribution
         /// <returns>Translated String</returns>
         protected string GetPipeColorString(PipeColor type)
         {
-            var res = "";
-            switch (type)
+            return type switch
             {
-                case PipeColor.Blue:
-                    res += AirTypeKey.Translate(ColdAirKey.Translate());
-                    break;
-
-                case PipeColor.Red:
-                    res += AirTypeKey.Translate(HotAirKey.Translate());
-                    break;
-
-                case PipeColor.Cyan:
-                    res += AirTypeKey.Translate(FrozenAirKey.Translate());
-                    break;
-
-                default:
-                    res += AirTypeKey.Translate("Unknown");
-                    break;
-            }
-
-            return res;
+                PipeColor.Blue => AirTypeKey.Translate(ColdAirKey.Translate()),
+                PipeColor.Red => AirTypeKey.Translate(HotAirKey.Translate()),
+                PipeColor.Cyan => AirTypeKey.Translate(FrozenAirKey.Translate()),
+                PipeColor.Green => "Green Pipe",
+                _ => AirTypeKey.Translate("Unknown"),
+            };
         }
     }
 }

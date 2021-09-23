@@ -11,8 +11,8 @@ namespace CentralizedThermalDistribution
         /// <param name="respawningAfterLoad">Unused flag</param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            SetPipeColor(BasePipeColor); // Pipes spawn with a preset color
             base.PostSpawnSetup(respawningAfterLoad);
+            SetPipeColor(BasePipeColor); // Pipes spawn with a preset color
         }
 
         /// <summary>
@@ -37,6 +37,11 @@ namespace CentralizedThermalDistribution
             if (CurrentPipeColor != PipeColor.None)
             {
                 CentralizedThermalDistributionUtility.GetNetManager(parent.Map).RegisterPipe(this);
+            }
+
+            if (parent.Graphic is Graphic_Wrapper_CoolantPipe)
+            {
+                (parent.Graphic as Graphic_Wrapper_CoolantPipe).pipeColor = BasePipeColor;
             }
         }
 

@@ -32,6 +32,7 @@
   <CentralizedThermalDistribution.Command.SwitchPipe.Red>Red Pipe Only</CentralizedThermalDistribution.Command.SwitchPipe.Red>
   <CentralizedThermalDistribution.Command.SwitchPipe.Blue>Blue Pipe Only</CentralizedThermalDistribution.Command.SwitchPipe.Blue>
   <CentralizedThermalDistribution.Command.SwitchPipe.Cyan>Cyan Pipe Only</CentralizedThermalDistribution.Command.SwitchPipe.Cyan>
+  <CentralizedThermalDistribution.Command.SwitchPipe.Cyan>Green Pipe Only</CentralizedThermalDistribution.Command.SwitchPipe.Cyan>
   
   <CentralizedThermalDistribution.Settings.ModName>Centralized Thermal Distribution</CentralizedThermalDistribution.Settings.ModName>
   <CentralizedThermalDistribution.Settings.HidepipesTitle>Hide coolant pipes</CentralizedThermalDistribution.Settings.HidepipesTitle>

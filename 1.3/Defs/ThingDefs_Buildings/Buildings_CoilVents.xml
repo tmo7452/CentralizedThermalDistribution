@@ -88,6 +88,7 @@
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>1.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
@@ -125,6 +126,7 @@
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>2.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
@@ -162,6 +164,7 @@
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>4.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">
@@ -201,6 +204,7 @@
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>8.0</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable">

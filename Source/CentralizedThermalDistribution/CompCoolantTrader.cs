@@ -7,7 +7,6 @@ namespace CentralizedThermalDistribution
 {
     public abstract class CompCoolantTrader : CompCoolant
     {
-
         public enum PipeColorSelection
         {
             Red = 0,

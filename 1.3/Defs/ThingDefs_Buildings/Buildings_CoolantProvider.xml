@@ -63,6 +63,7 @@
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>-1.00</ThermalWorkMultiplier>
         <ProviderMaxTemperatureDelta>50.0</ProviderMaxTemperatureDelta>
       </li>
@@ -129,6 +130,7 @@
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
         <ProviderMaxTemperatureDelta>35.0</ProviderMaxTemperatureDelta>
       </li>
@@ -194,6 +196,7 @@
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderElectricFurnace</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_TempControl">
@@ -256,6 +259,7 @@
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderFueledFurnace</compClass>
+        <pipeColor>Trader</pipeColor>
         <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
       </li>
       <li Class="CompProperties_Flickable" />

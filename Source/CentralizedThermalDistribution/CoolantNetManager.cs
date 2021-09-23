@@ -154,6 +154,8 @@ namespace CentralizedThermalDistribution
 
         public bool IsPipeAt(IntVec3 pos, PipeColor pipeColor)
         {
+            if ((pipeColor == PipeColor.None) || (pipeColor == PipeColor.Trader))
+                return false;
             return GetPipeFlag(pos, PipeColorToIndex(pipeColor));
         }
 
