@@ -15,6 +15,9 @@
     <statBases>
       <Beauty>-10</Beauty>
     </statBases>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_CoolantTrader</li>
+    </placeWorkers>
   </ThingDef>
   
     <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
@@ -64,8 +67,14 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>-1.00</ThermalWorkMultiplier>
-        <ProviderMaxTemperatureDelta>50.0</ProviderMaxTemperatureDelta>
+        <traderThermalWorkMultiplier>-1.00</traderThermalWorkMultiplier>
+        <traderMaxTemperatureDelta>50.0</traderMaxTemperatureDelta>
+        <traderOutputDirections>
+          <li>north</li>
+          <li>south</li>
+          <li>east</li>
+          <li>west</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_TempControl">
         <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
@@ -79,9 +88,6 @@
     <researchPrerequisites>
       <li>BasicThermalDistribution</li>
     </researchPrerequisites>
-    <placeWorkers>
-      <li>CentralizedThermalDistribution.PlaceWorker_IntakeFan</li>
-    </placeWorkers>
   </ThingDef>
   
   <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
@@ -131,8 +137,14 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
-        <ProviderMaxTemperatureDelta>35.0</ProviderMaxTemperatureDelta>
+        <traderThermalWorkMultiplier>1.00</traderThermalWorkMultiplier>
+        <traderMaxTemperatureDelta>35.0</traderMaxTemperatureDelta>
+        <traderOutputDirections>
+          <li>north</li>
+          <li>south</li>
+          <li>east</li>
+          <li>west</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_TempControl">
         <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
@@ -146,9 +158,6 @@
     <researchPrerequisites>
       <li>BasicThermalDistribution</li>
     </researchPrerequisites>
-    <placeWorkers>
-      <li>CentralizedThermalDistribution.PlaceWorker_IntakeFan</li>
-    </placeWorkers>
   </ThingDef>
   
   <ThingDef ParentName="CentralizedThermalDistribution_BaseThermalBuilding">
@@ -197,7 +206,10 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderElectricFurnace</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
+        <traderThermalWorkMultiplier>1.00</traderThermalWorkMultiplier>
+        <traderOutputDirections>
+          <li>center</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_TempControl">
         <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
@@ -260,7 +272,10 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantProviderFueledFurnace</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>1.00</ThermalWorkMultiplier>
+        <traderThermalWorkMultiplier>1.00</traderThermalWorkMultiplier>
+        <traderOutputDirections>
+          <li>center</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_Flickable" />
       <li Class="CompProperties_Refuelable">

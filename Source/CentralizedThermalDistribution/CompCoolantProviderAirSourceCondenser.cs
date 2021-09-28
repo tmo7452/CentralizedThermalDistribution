@@ -34,7 +34,7 @@ namespace CentralizedThermalDistribution
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            MaxTemperatureDelta = Props.ProviderMaxTemperatureDelta * 2; // For why *2, see comments for "Thermal efficiency check"
+            MaxTemperatureDelta = Props.traderMaxTemperatureDelta * 2; // For why *2, see comments for "Thermal efficiency check"
             AddGizmo(() => GetMinEfficiencyToggle(this));
         }
 
@@ -62,19 +62,19 @@ namespace CentralizedThermalDistribution
             base.CheckStatus(); //Temperature reached check
 
             // === Air blockage check ===
-            // Count number of blocked adjacent cells
-            var adjList = GenAdj.CellsAdjacentCardinal(parent.Position, parent.Rotation, parent.def.Size).ToList();
-            int unblockedAdjacent = 0;
-            foreach (var intVec in adjList)
+            // Count number of blocked output cells
+            var outputCells = OutputLocations;
+            int openOutputCells = 0;
+            foreach (var intVec in outputCells)
             {
                 if (intVec.Impassable(parent.Map))
                 {
                     continue;
                 }
-                unblockedAdjacent++;
+                openOutputCells++;
             }
-            // Air flow efficiency is ratio of adjacent open cells
-            AirFlowEfficiency = (float)unblockedAdjacent / adjList.Count;
+            // Air flow efficiency is ratio of blocked to open output cells
+            AirFlowEfficiency = (float)openOutputCells / outputCells.Count;
             IsAirBlocked = (AirFlowEfficiency == 0);  // True if all adjacent cells are blocked
 
             // === Thermal efficiency check ===
@@ -107,9 +107,20 @@ namespace CentralizedThermalDistribution
 
         public override void DoThermalWork(int tickMultiplier)
         {
-            ThermalWork = TotalEfficiency * AirSourceCondenserMultiplier * ThermalWorkMultiplier * tickMultiplier;
-            PushThermalLoad(ThermalWork); // Push to coolant
-            GenTemperature.PushHeat(parent.Position, parent.Map, (System.Math.Abs(ThermalWork) * WasteHeatMultiplier) - ThermalWork); // Push exhaust (negative ThermalWork)
+            ThermalWork = 0;
+            float desiredWork = TotalEfficiency * AirSourceCondenserMultiplier * ThermalWorkMultiplier * tickMultiplier;
+            // Push exhaust (negative ThermalWork) split between unique output cells
+            var cells = UniqueOutputLocations; // Call once, because it's not a quick lookup
+            var heatPerCell = ((System.Math.Abs(desiredWork) * WasteHeatMultiplier) - desiredWork) / cells.Count; // Includes waste heat
+            foreach (var cell in cells)
+            {
+                if (cell.GetRoom(parent.Map) is null)
+                    continue;
+                GenTemperature.PushHeat(cell, parent.Map, heatPerCell);
+                ThermalWork += desiredWork / cells.Count;
+            }
+            // Push to coolant
+            PushThermalLoad(ThermalWork);
         }
 
         /// <summary>

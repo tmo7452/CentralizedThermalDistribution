@@ -16,13 +16,24 @@ namespace CentralizedThermalDistribution
             ThermalWork = 0f;
             if (!IsConnected) return;
             if (!coolantNet.IsNetActive()) return;
-            var outputTile = parent.Position + IntVec3.North.RotatedBy(parent.Rotation);
-            if (outputTile.Impassable(parent.Map)) return;
 
-            // Linear, KISS
-            ThermalWork = (outputTile.GetTemperature(parent.Map) - coolantNet.GetNetCoolantTemperature()) * CoilVentMultiplier * ThermalWorkMultiplier * tickMultiplier; // Positive if room is hotter than coolant
-            PushThermalLoad(ThermalWork); // Push coolant net (positive ThermalWork)
-            GenTemperature.PushHeat(outputTile, parent.Map, -ThermalWork); // Push exhaust (negative ThermalWork)
+            // Iterate over all output cells
+            foreach (var outputCell in UniqueOutputLocations)
+            {
+                // Skip cells without heatable space
+                if (outputCell.GetRoom(parent.Map) is null)
+                    continue;
+
+                // Calculate desired work for that cell based on temperature difference.
+                // Linear, KISS
+                float desiredWork = (outputCell.GetTemperature(parent.Map) - coolantNet.GetNetCoolantTemperature()) * CoilVentMultiplier * ThermalWorkMultiplier * tickMultiplier; // Positive if room is hotter than coolant
+
+                // Push exhaust (negative ThermalWork) to this cell
+                GenTemperature.PushHeat(outputCell, parent.Map, -desiredWork);
+                ThermalWork += desiredWork;
+            }
+            // Push work done to coolant net (positive ThermalWork)
+            PushThermalLoad(ThermalWork);
         }
 
 

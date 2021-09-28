@@ -4,7 +4,6 @@ using RimWorld;
 namespace CentralizedThermalDistribution
 {
 	// CompTempControl, but with ability to change what gets printed during inspection.
-
 	public class CompTempControlEx : CompTempControl
     {
 		public string targetTempString = "TargetTemperature";
@@ -24,11 +23,11 @@ namespace CentralizedThermalDistribution
 				stringBuilder.Append(consumptionModeString.Translate() + ": ");
 				if (operatingAtHighPower)
 				{
-					stringBuilder.AppendLine(consumptionHighString.Translate());
+					stringBuilder.AppendLine(consumptionHighString.Translate().CapitalizeFirst());
 				}
 				else
 				{
-					stringBuilder.AppendLine(consumptionLowString.Translate());
+					stringBuilder.AppendLine(consumptionLowString.Translate().CapitalizeFirst());
 				}
 			}
 			return stringBuilder.ToString().Trim();

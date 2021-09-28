@@ -27,7 +27,7 @@ namespace CentralizedThermalDistribution
             compTempControl.consumptionModeString = null; // Disables printing the consumption mode, since it uses same power regardless.
 
             highFuelConsumptionRate = compRefuelable.Props.fuelConsumptionRate;
-            lowFuelConsumptionRate = highFuelConsumptionRate * Props.ProviderLowFuelConsumptionFactor;
+            lowFuelConsumptionRate = highFuelConsumptionRate * Props.providerLowFuelConsumptionFactor;
         }
 
         public override void CheckStatus()

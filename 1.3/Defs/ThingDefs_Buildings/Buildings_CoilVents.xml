@@ -27,13 +27,15 @@
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <tickerType>Normal</tickerType>
+    <placeWorkers>
+      <li>CentralizedThermalDistribution.PlaceWorker_CoolantTrader</li>
+    </placeWorkers>
   </ThingDef>
   
   <!-- Parent Wall Mounted Coil Vent Building -->
   <ThingDef Abstract="True" Name="CentralizedThermalDistribution_BaseWallCoilVent" ParentName="CentralizedThermalDistribution_BaseCoilVent">
     <placeWorkers>
       <li>CentralizedThermalDistribution.PlaceWorker_NeedsWall</li>
-      <li>CentralizedThermalDistribution.PlaceWorker_CoilVent</li>
     </placeWorkers>
     <altitudeLayer>PawnUnused</altitudeLayer>
     <building>
@@ -56,9 +58,6 @@
       <canPlaceOverWall>true</canPlaceOverWall>
     </building>
     <holdsRoof>true</holdsRoof>
-    <placeWorkers>
-      <li>CentralizedThermalDistribution.PlaceWorker_SurroundCoilVent</li>
-    </placeWorkers>
   </ThingDef>
   
   <!-- Small Wall Coil Vent -->
@@ -89,7 +88,10 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>1.0</ThermalWorkMultiplier>
+        <traderThermalWorkMultiplier>1.0</traderThermalWorkMultiplier>
+        <traderOutputDirections>
+          <li>north</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -127,7 +129,10 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>2.0</ThermalWorkMultiplier>
+        <traderThermalWorkMultiplier>2.0</traderThermalWorkMultiplier>
+        <traderOutputDirections>
+          <li>north</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -165,7 +170,13 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>4.0</ThermalWorkMultiplier>
+        <traderThermalWorkMultiplier>4.0</traderThermalWorkMultiplier>
+        <traderOutputDirections>
+          <li>north</li>
+          <li>south</li>
+          <li>east</li>
+          <li>west</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -205,7 +216,13 @@
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
         <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
         <pipeColor>Trader</pipeColor>
-        <ThermalWorkMultiplier>8.0</ThermalWorkMultiplier>
+        <traderThermalWorkMultiplier>8.0</traderThermalWorkMultiplier>
+        <traderOutputDirections>
+          <li>north</li>
+          <li>south</li>
+          <li>east</li>
+          <li>west</li>
+        </traderOutputDirections>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>

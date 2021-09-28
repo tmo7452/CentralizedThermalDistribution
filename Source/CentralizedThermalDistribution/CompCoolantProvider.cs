@@ -52,7 +52,7 @@ namespace CentralizedThermalDistribution
         {
             base.PostSpawnSetup(respawningAfterLoad);
             coolantNetManager.RegisterProvider(this);
-            CoolantThermalMass = Props.ProviderCoolantThermalMass;
+            CoolantThermalMass = Props.providerCoolantThermalMass;
             CoolantTemperature = parent.Position.GetTemperature(parent.Map);
             compPowerTrader = parent.GetComp<CompPowerTrader>();
             compTempControl = parent.GetComp<CompTempControlEx>();
