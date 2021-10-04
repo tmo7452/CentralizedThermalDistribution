@@ -28,7 +28,7 @@
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <tickerType>Normal</tickerType>
     <placeWorkers>
-      <li>CentralizedThermalDistribution.PlaceWorker_CoolantTrader</li>
+      <li>CentralizedThermalDistribution.PlaceWorker_ThermalWorker</li>
     </placeWorkers>
   </ThingDef>
   
@@ -86,12 +86,16 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>1.0</traderThermalWorkMultiplier>
-        <traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <totalWorkMultiplier>5.0</totalWorkMultiplier>
+        <inputMedium>coolant</inputMedium>
+        <outputMedium>ambient</outputMedium>
+        <thermalTransferMode>passive</thermalTransferMode>
+        <ambientOutput_directions>
           <li>north</li>
-        </traderOutputDirections>
+        </ambientOutput_directions>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -127,12 +131,16 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>2.0</traderThermalWorkMultiplier>
-        <traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <totalWorkMultiplier>10.00</totalWorkMultiplier>
+        <inputMedium>coolant</inputMedium>
+        <outputMedium>ambient</outputMedium>
+        <thermalTransferMode>passive</thermalTransferMode>
+        <ambientOutput_directions>
           <li>north</li>
-        </traderOutputDirections>
+        </ambientOutput_directions>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -168,15 +176,20 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>4.0</traderThermalWorkMultiplier>
-        <traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <totalWorkMultiplier>20.00</totalWorkMultiplier>
+        <inputMedium>coolant</inputMedium>
+        <outputMedium>ambient</outputMedium>
+        <thermalTransferMode>passive</thermalTransferMode>
+        <ambientOutput_directions>
           <li>north</li>
           <li>south</li>
           <li>east</li>
           <li>west</li>
-        </traderOutputDirections>
+        </ambientOutput_directions>
+        <ambientOutput_ignoredBlockedCells>2</ambientOutput_ignoredBlockedCells>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>
@@ -214,15 +227,20 @@
     </costList>
     <comps>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantConsumerCoilVent</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>8.0</traderThermalWorkMultiplier>
-        <traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantConsumer</compClass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <totalWorkMultiplier>40.00</totalWorkMultiplier>
+        <inputMedium>coolant</inputMedium>
+        <outputMedium>ambient</outputMedium>
+        <thermalTransferMode>passive</thermalTransferMode>
+        <ambientOutput_directions>
           <li>north</li>
           <li>south</li>
           <li>east</li>
           <li>west</li>
-        </traderOutputDirections>
+        </ambientOutput_directions>
+        <ambientOutput_ignoredBlockedCells>3</ambientOutput_ignoredBlockedCells>
       </li>
       <li Class="CompProperties_Flickable">
         <commandTexture>UI/Commands/Vent</commandTexture>

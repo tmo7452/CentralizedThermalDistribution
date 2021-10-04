@@ -45,16 +45,12 @@ namespace CentralizedThermalDistribution
             }
         }
 
-        //public List<IntVec3> InputLocations => GetInputLocations(parent.def, parent.Position, parent.Rotation, false);
-        //public List<IntVec3> UniqueInputLocations => GetInputLocations(parent.def, parent.Position, parent.Rotation, true, parent.Map);
-        public List<IntVec3> OutputLocations => GetOutputLocations(parent.def, parent.Position, parent.Rotation, false);
-        public List<IntVec3> UniqueOutputLocations => GetOutputLocations(parent.def, parent.Position, parent.Rotation, true, parent.Map);
-
         private List<CoolantNet> AvailableNets = new();
         private List<System.Func<Gizmo>> Gizmos = new(); // A list of lambda functions to be called during gizmo checks.
 
         public float ThermalWork { get; protected set; } = 0f;
-        protected float ThermalWorkMultiplier; // Multiplier unique to the building type, set by the Def. Positive if heating coolant, negative if cooling.
+
+        public abstract float? GetTemp();
 
         public void AddGizmo(System.Func<Gizmo> gizmo)
         {
@@ -69,12 +65,11 @@ namespace CentralizedThermalDistribution
             foreach (var gizmo in Gizmos)
                 yield return gizmo();
         }
-
+        
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
             Props.pipeColor = PipeColor.Trader;
-            ThermalWorkMultiplier = Props.traderThermalWorkMultiplier;
             AddGizmo(() => GetPipeSwitchToggle(this));
             RescanNets();
             pipeColorSelection = DefaultPipeColorSelection;
@@ -89,14 +84,6 @@ namespace CentralizedThermalDistribution
             var ExposedPipeColorSelection = pipeColorSelection;
             Scribe_Values.Look(ref ExposedPipeColorSelection, "pipeColorSelection", DefaultPipeColorSelection);
             if (ExposedPipeColorSelection != pipeColorSelection) pipeColorSelection = ExposedPipeColorSelection;
-        }
-
-        public override string CompInspectStringExtra()
-        {
-            System.Text.StringBuilder output = new();
-            output.AppendLine(base.CompInspectStringExtra());
-            output.AppendLine("DEBUG ThermalWork: " + ThermalWork);
-            return output.ToString().Trim();
         }
 
         public override void SetNet(CoolantNet newNet)
@@ -150,95 +137,6 @@ namespace CentralizedThermalDistribution
         {
             if (AvailableNets.Contains(net))
                 AvailableNets.Remove(net);
-        }
-
-        //public static List<IntVec3> GetInputLocations(ThingDef def, IntVec3 center, Rot4 rot, bool onlyUniqueRooms = false, Map map = null)
-        //{
-        //    return GetInOutLocations(def.GetCompProperties<CompProperties_Coolant>().traderInputDirections, def.size, center, rot, onlyUniqueRooms, map);
-        //}
-
-        public static List<IntVec3> GetOutputLocations(ThingDef def, IntVec3 center, Rot4 rot, bool onlyUniqueRooms = false, Map map = null)
-        {
-            return GetInOutLocations(def.GetCompProperties<CompProperties_Coolant>().traderOutputDirections, def.size, center, rot, onlyUniqueRooms, map);
-        }
-
-        private static List<IntVec3> GetInOutLocations(List<ThermalInOutDirection> dirs, IntVec2 size, IntVec3 center, Rot4 rot, bool onlyUniqueRooms = false, Map map = null)
-        {
-            List<IntVec3> locs = new();
-            foreach (var dir in dirs)
-            {
-                //Iterating ThermalOutputDirections, as defined in the comp def. 
-                foreach (var cell in dir == ThermalInOutDirection.center ? GenAdj.CellsOccupiedBy(center, rot, size) : CellsAdjacentDirection(center, rot, size, dir.ToRot4()))
-                {
-                    //Iterating individual cells, based on building size and rotation.
-                    if (onlyUniqueRooms)
-                    {
-                        bool isUnique = true;
-                        foreach (var loc in locs)
-                        {
-                            if (cell.GetRoom(map) == loc.GetRoom(map))
-                                isUnique = false;
-                        }
-                        if (isUnique)
-                            locs.Add(cell);
-                    }
-                    else locs.Add(cell);
-                }
-            }
-            return locs;
-        }
-
-        // Modified from GenAdj.CellsAdjacent decompile to filter output to a specific side.
-        // I'd assume this is what GenAdj.CellsAdjacentAlongEdge is for, but its output is the wrong size.
-        private static IEnumerable<IntVec3> CellsAdjacentDirection(IntVec3 center, Rot4 rot, IntVec2 size, Rot4 dir)
-        {
-            GenAdj.AdjustForRotation(ref center, ref size, rot);
-            int minX = center.x - (size.x - 1) / 2 - 1;
-            int maxX = minX + size.x + 1;
-            int minZ = center.z - (size.z - 1) / 2 - 1;
-            int maxZ = minZ + size.z + 1;
-            IntVec3 cur;
-            switch ((rot.AsInt + dir.AsInt) % 4)
-            {
-                case 0:
-                    cur = new IntVec3(maxX, 0, maxZ);
-                    do
-                    {
-                        cur.x--;
-                        yield return cur;
-                    }
-                    while (cur.x > minX + 1);
-                    yield break;
-                case 1:
-                    cur = new IntVec3(maxX, 0, minZ);
-                    do
-                    {
-                        cur.z++;
-                        yield return cur;
-                    }
-                    while (cur.z < maxZ - 1);
-                    yield break;
-                case 2:
-                    cur = new IntVec3(minX, 0, minZ);
-                    do
-                    {
-                        cur.x++;
-                        yield return cur;
-                    }
-                    while (cur.x < maxX - 1);
-                    yield break;
-                case 3:
-                    cur = new IntVec3(minX, 0, maxZ);
-                    do
-                    {
-                        cur.z--;
-                        yield return cur;
-                    }
-                    while (cur.z > minZ + 1);
-                    yield break;
-                default:
-                    yield break;
-            }
         }
 
         /// <summary>

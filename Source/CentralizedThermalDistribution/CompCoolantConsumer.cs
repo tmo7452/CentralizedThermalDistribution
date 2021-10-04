@@ -5,7 +5,7 @@ using Verse;
 
 namespace CentralizedThermalDistribution
 {
-    public abstract class CompCoolantConsumer : CompCoolantTrader
+    public class CompCoolantConsumer : CompCoolantTrader
     {
         public const string AirFlowOutputKey = "CentralizedThermalDistribution.AirFlowOutput";
         public const string IntakeTempKey = "CentralizedThermalDistribution.Consumer.ConvertedTemperature";
@@ -43,6 +43,11 @@ namespace CentralizedThermalDistribution
             base.SetNet(newNet);
             if (coolantNet != null)
                 coolantNet.Consumers.Add(this);
+        }
+
+        public override float? GetTemp()
+        {
+            return coolantNet?.GetNetCoolantTemperature();
         }
 
         /// <summary>

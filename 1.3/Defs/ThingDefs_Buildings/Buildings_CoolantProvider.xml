@@ -16,7 +16,7 @@
       <Beauty>-10</Beauty>
     </statBases>
     <placeWorkers>
-      <li>CentralizedThermalDistribution.PlaceWorker_CoolantTrader</li>
+      <li>CentralizedThermalDistribution.PlaceWorker_ThermalWorker</li>
     </placeWorkers>
   </ThingDef>
   
@@ -65,16 +65,23 @@
         <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>-1.00</traderThermalWorkMultiplier>
-        <traderMaxTemperatureDelta>50.0</traderMaxTemperatureDelta>
-        <traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
+        <thermalMass>10</thermalMass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <totalWorkMultiplier>-10.00</totalWorkMultiplier>
+        <inputMedium>ambient</inputMedium>
+        <outputMedium>coolant</outputMedium>
+        <thermalTransferMode>active</thermalTransferMode>
+        <enableEfficiencyLimit>true</enableEfficiencyLimit>
+        <active_maxTemperatureDelta>60.0</active_maxTemperatureDelta>
+        <ambientInput_directions>
           <li>north</li>
           <li>south</li>
           <li>east</li>
           <li>west</li>
-        </traderOutputDirections>
+        </ambientInput_directions>
+        <ambientInput_ignoredBlockedCells>1</ambientInput_ignoredBlockedCells>
       </li>
       <li Class="CompProperties_TempControl">
         <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
@@ -135,16 +142,23 @@
         <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProviderAirSourceCondenser</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>1.00</traderThermalWorkMultiplier>
-        <traderMaxTemperatureDelta>35.0</traderMaxTemperatureDelta>
-        <traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
+        <thermalMass>10</thermalMass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <totalWorkMultiplier>10.00</totalWorkMultiplier>
+        <inputMedium>ambient</inputMedium>
+        <outputMedium>coolant</outputMedium>
+        <thermalTransferMode>active</thermalTransferMode>
+        <enableEfficiencyLimit>true</enableEfficiencyLimit>
+        <active_maxTemperatureDelta>60.0</active_maxTemperatureDelta>
+        <ambientInput_directions>
           <li>north</li>
           <li>south</li>
           <li>east</li>
           <li>west</li>
-        </traderOutputDirections>
+        </ambientInput_directions>
+        <ambientInput_ignoredBlockedCells>1</ambientInput_ignoredBlockedCells>
       </li>
       <li Class="CompProperties_TempControl">
         <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
@@ -204,19 +218,19 @@
         <compClass>CompPowerTrader</compClass>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProviderElectricFurnace</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>1.00</traderThermalWorkMultiplier>
-        <traderOutputDirections>
-          <li>center</li>
-        </traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
+        <thermalMass>10</thermalMass>
+      </li>
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <inputMedium>power</inputMedium>
+        <outputMedium>coolant</outputMedium>
+        <thermalTransferMode>direct</thermalTransferMode>
       </li>
       <li Class="CompProperties_TempControl">
         <compClass>CentralizedThermalDistribution.CompTempControlEx</compClass>
-        <lowPowerConsumptionFactor>0.05</lowPowerConsumptionFactor>
       </li>
-      <li Class="CompProperties_Flickable" />
-      <li Class="CompProperties_Breakdownable" />
+      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_Breakdownable"/>
     </comps>
     <designationCategory>Temperature</designationCategory>
     <designatorDropdown>CTD_Furnaces</designatorDropdown>
@@ -270,14 +284,16 @@
         <lowPowerConsumptionFactor>1.0</lowPowerConsumptionFactor>
       </li>
       <li Class="CentralizedThermalDistribution.CompProperties_Coolant">
-        <compClass>CentralizedThermalDistribution.CompCoolantProviderFueledFurnace</compClass>
-        <pipeColor>Trader</pipeColor>
-        <traderThermalWorkMultiplier>1.00</traderThermalWorkMultiplier>
-        <traderOutputDirections>
-          <li>center</li>
-        </traderOutputDirections>
+        <compClass>CentralizedThermalDistribution.CompCoolantProvider</compClass>
+        <thermalMass>10</thermalMass>
       </li>
-      <li Class="CompProperties_Flickable" />
+      <li Class="CentralizedThermalDistribution.CompProperties_ThermalWorker">
+        <totalWorkMultiplier>10.00</totalWorkMultiplier>
+        <inputMedium>fuel</inputMedium>
+        <outputMedium>coolant</outputMedium>
+        <thermalTransferMode>direct</thermalTransferMode>
+      </li>
+      <li Class="CompProperties_Flickable"/>
       <li Class="CompProperties_Refuelable">
         <fuelConsumptionRate>22.0</fuelConsumptionRate>
         <fuelCapacity>75.0</fuelCapacity>

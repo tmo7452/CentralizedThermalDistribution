@@ -15,7 +15,6 @@ namespace CentralizedThermalDistribution
             Green = 4,
         }
         public const int PipeColorCount = 4;
-        public const int tickRateInterval = 50; // Before this can change, the following methods would require rework: CompTick(), CompTickRare()
         public static int PipeColorToIndex(PipeColor color)
         {
             return (int)color - 1;
@@ -77,12 +76,6 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
-        ///     Check if connected to coolant network.
-        /// </summary>
-        /// <returns></returns>
-        
-
-        /// <summary>
         ///     Inspect Component String
         /// </summary>
         /// <returns>String to be Displayed on the Component window</returns>
@@ -103,21 +96,6 @@ namespace CentralizedThermalDistribution
                     output.AppendLine("DEBUG " + CurrentPipeColor + " net inactive");
             }
             return output.ToString().Trim();
-        }
-
-        protected abstract void CoolantTick(int tickMultiplier);
-
-        public override void CompTick()
-        {
-            if (parent.IsHashIntervalTick(50))
-                CoolantTick(1);
-            base.CompTick();
-        }
-
-        public override void CompTickRare()
-        {
-            CoolantTick(5);
-            base.CompTickRare();
         }
 
         /// <summary>

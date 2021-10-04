@@ -45,24 +45,6 @@ namespace CentralizedThermalDistribution
             }
         }
 
-        /*
-        /// <summary>
-        ///     Component Inspection for Pipes
-        /// </summary>
-        /// <returns>String to Display for Pipes</returns>
-        public override string CompInspectStringExtra()
-        {
-            string output = GetAirTypeString(Props.flowType);
-            output += "\nConnected: " + IsConnected();
-            output += "\nNet ID: " + NetID;
-            var net = GetNet();
-            if (net != null)
-            {
-                output += "\nNet Coolant Temp: " + net.GetNetCoolantTemperature();
-            }
-            return output;
-        }
-        */
         /// <summary>
         ///     Look up the coolant network for this pipe.
         /// </summary>
@@ -72,9 +54,9 @@ namespace CentralizedThermalDistribution
             return coolantNetManager.GetNet(NetID);
         }
 
-        protected override void CoolantTick(int tickMultiplier)
+        /*protected override void CoolantTick(int tickMultiplier)
         {
             return;
-        }
+        }*/
     }
 }

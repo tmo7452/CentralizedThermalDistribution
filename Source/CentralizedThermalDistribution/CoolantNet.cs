@@ -87,14 +87,13 @@ namespace CentralizedThermalDistribution
         }
 
         /// <summary>
-        ///     Get current tempature of the net coolant. Always check IsNetActive and do not call if net is inactive.
+        ///     Get current tempature of the net coolant, or null if inactive.
         /// </summary>
-        /// <returns>Float Coolant Temp</returns>
-        public float GetNetCoolantTemperature()
+        /// <returns>Float coolant temp or null</returns>
+        public float? GetNetCoolantTemperature()
         {
             if (IsNetActive()) return CoolantTemperature;
-            Log.Error("GetNetCoolantTemperature called while net is inactive.");
-            return 666f;
+            return null;
         }
     }
 }
